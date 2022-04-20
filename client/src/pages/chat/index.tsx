@@ -13,6 +13,8 @@ function chat() {
         getAllChats();
     }, []);
 
+    console.log(chats);
+
     return <div>chat</div>;
 }
 
