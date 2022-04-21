@@ -21,6 +21,7 @@ app.get('/', (req, res) => {
 
 // all routes
 app.use('/api', routes);
+
 // error handler middleware
 app.use(errorHandler);
 

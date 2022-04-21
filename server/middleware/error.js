@@ -2,7 +2,8 @@
 /* eslint-disable no-param-reassign */
 const ErrorHandler = require('../lib/errorHandler');
 
-module.exports = (err, req, res, next) => {
+module.exports = (error, req, res, next) => {
+    let err = error;
     err.statusCode = err.statusCode || 500;
     err.message = err.message || 'Internal server error';
 
