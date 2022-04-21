@@ -1,24 +1,18 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
-import bgImage from "assets/images/background.jpg";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-interface Iinputs {
-    id: string;
-    placeholder: string;
-    type: string;
-    key: "email" | "password";
-    label: string;
-}
-
-interface ILogin {
-    email: string;
-    password: string;
-}
-
-const inputs: Iinputs[] = [
+const inputs: IRegisterInputs[] = [
+    {
+        id: "Name",
+        placeholder: "Enter your Name",
+        key: "name",
+        type: "text",
+        label: "Name",
+    },
     {
         id: "email",
         placeholder: "Enter your email address",
@@ -33,22 +27,26 @@ const inputs: Iinputs[] = [
         type: "password",
         label: "Password",
     },
+    {
+        id: "Confirm Password",
+        placeholder: "Confirm password",
+        key: "confirmPassword",
+        type: "password",
+        label: "Confirm Password",
+    },
 ];
 
 function Register() {
-    const { register, handleSubmit, reset } = useForm<ILogin>();
+    const { register, handleSubmit, reset } = useForm<IRegister>();
 
-    const handelLogin = (data: ILogin) => {
+    const handelLogin = (data: IRegister) => {
         console.log(data);
         reset();
     };
 
     return (
         <section>
-            <div
-                style={{ backgroundImage: `url("${bgImage.src}")` }}
-                className="flex h-screen flex-col items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-10"
-            >
+            <div className="flex h-full flex-col items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 bg-cover bg-center bg-no-repeat px-4 py-10">
                 {/* header */}
                 <div className="mb-6 w-full rounded-lg bg-white py-6 text-center text-3xl text-gray-700 shadow-lg lg:w-2/5">
                     <h1 className="font-medium drop-shadow-lg">Chatty</h1>
@@ -78,13 +76,7 @@ function Register() {
                         className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
                         type="submit"
                     >
-                        Login
-                    </button>
-                    <button
-                        className="w-full rounded-lg bg-red-500 py-3 text-sm font-semibold text-white"
-                        type="button"
-                    >
-                        Get guest user credentials
+                        Sign Up
                     </button>
                 </form>
             </div>

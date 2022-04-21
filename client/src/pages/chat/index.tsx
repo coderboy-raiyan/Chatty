@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-unused-expressions */
-import ChatsHttpReq from "pages/services/chat.service";
 import React, { useEffect, useState } from "react";
+import ChatsHttpReq from "services/chat.service";
 
 function chat() {
     const [chats, setChats] = useState([]);

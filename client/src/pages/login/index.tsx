@@ -1,24 +1,11 @@
+/* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
-import bgImage from "assets/images/background.jpg";
 import React from "react";
 import { useForm } from "react-hook-form";
 
-interface Iinputs {
-    id: string;
-    placeholder: string;
-    type: string;
-    key: "email" | "password";
-    label: string;
-}
-
-interface ILogin {
-    email: string;
-    password: string;
-}
-
-const inputs: Iinputs[] = [
+const inputs: ILoginInputs[] = [
     {
         id: "email",
         placeholder: "Enter your email address",
@@ -46,8 +33,8 @@ function login() {
     return (
         <section>
             <div
-                style={{ backgroundImage: `url("${bgImage.src}")` }}
-                className="flex h-screen flex-col items-center justify-center bg-cover bg-center bg-no-repeat px-4 py-10"
+                // style={{ backgroundImage: `url("${bgImage.src}")` }}
+                className="flex h-screen flex-col items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 bg-cover bg-center bg-no-repeat px-4 py-10"
             >
                 {/* header */}
                 <div className="mb-6 w-full rounded-lg bg-white py-6 text-center text-3xl text-gray-700 shadow-lg lg:w-2/5">
