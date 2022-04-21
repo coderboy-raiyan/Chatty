@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 const { AsyncErrorHandler } = require('../middleware/createAsyncError');
 const User = require('../models/User');
@@ -12,12 +13,12 @@ module.exports.registerUser = AsyncErrorHandler(async (req, res, next) => {
 
     const result = await User.create(req.body);
     if (result) {
-        const token = await user.generateJwt(result._id);
+        const token = await result.generateJwt();
         const data = {
             email: result.email,
             name: result.name,
             pic: result.pic,
-            token: token,
+            token,
         };
 
         res.status(200).send({
@@ -25,5 +26,32 @@ module.exports.registerUser = AsyncErrorHandler(async (req, res, next) => {
             message: 'Successfully registered',
             data,
         });
+    }
+});
+
+module.exports.loginUser = AsyncErrorHandler(async (req, res, next) => {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (!user) {
+        return next(new ErrorHandler('Invalid email or password'));
+    }
+    const isVerified = await user.verifyPassword(req.body.password);
+
+    if (isVerified) {
+        const token = await user.generateJwt();
+        const data = {
+            email: user.email,
+            name: user.name,
+            pic: user.pic,
+            token,
+        };
+
+        res.status(200).send({
+            success: true,
+            message: 'Logged in successfully',
+            data,
+        });
+    } else {
+        next(new ErrorHandler('Invalid email and password'));
     }
 });

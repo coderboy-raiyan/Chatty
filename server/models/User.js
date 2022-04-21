@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable func-names */
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const userSchema = mongoose.Schema(
@@ -35,8 +37,13 @@ userSchema.pre('save', async function (next) {
     next();
 });
 
-userSchema.methods.generateJwt = async function (id) {
-    const token = jwt.sign({ _id: id }, process.env.JWT_SECRET, {
+userSchema.methods.verifyPassword = async function (password) {
+    const verified = await bcrypt.compare(password, this.password);
+    return verified;
+};
+
+userSchema.methods.generateJwt = async function () {
+    const token = jwt.sign({ _id: this._id }, process.env.JWT_SECRET, {
         expiresIn: '30d',
     });
     return `Bearer ${token}`;

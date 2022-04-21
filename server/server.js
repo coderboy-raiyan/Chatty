@@ -23,6 +23,7 @@ app.get('/', (req, res) => {
 app.use('/api', routes);
 
 // error handler middleware
+
 app.use(errorHandler);
 
 app.listen(port, () => {
