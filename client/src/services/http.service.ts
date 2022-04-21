@@ -6,7 +6,7 @@ import axios, { AxiosInstance, AxiosResponse } from "axios";
 
 const axiosConfig = {
     baseURL: "http://localhost:5000",
-    timeout: 4000,
+    // timeout: 4000,
 };
 
 const instance: AxiosInstance = axios.create(axiosConfig);

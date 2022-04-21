@@ -14,9 +14,9 @@ interface ILogin {
 
 interface IRegisterInputs {
     id: string;
-    placeholder: string;
+    placeholder?: string;
     type: string;
-    key: "email" | "password" | "name" | "confirmPassword";
+    key: "email" | "password" | "name" | "confirmPassword" | "pic";
     label: string;
 }
 
@@ -25,4 +25,5 @@ interface IRegister {
     password: string;
     name: string;
     confirmPassword: string;
+    pic: string;
 }

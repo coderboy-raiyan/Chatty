@@ -1,9 +1,11 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
 import React from "react";
 import { useForm } from "react-hook-form";
+import AuthHttpReq from "services/auth.service";
 
 const inputs: IRegisterInputs[] = [
     {
@@ -34,13 +36,32 @@ const inputs: IRegisterInputs[] = [
         type: "password",
         label: "Confirm Password",
     },
+    {
+        id: "Upload",
+        key: "pic",
+        type: "file",
+        label: "Upload your profile picture",
+    },
 ];
 
 function Register() {
     const { register, handleSubmit, reset } = useForm<IRegister>();
 
-    const handelLogin = (data: IRegister) => {
-        console.log(data);
+    const handelLogin = async (data: IRegister) => {
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("password", data.password);
+        formData.append("name", data.name);
+        formData.append("image", data.pic[0]);
+        // console.log(data.pic[0]);
+
+        try {
+            const data = await AuthHttpReq.register(formData);
+            console.log(data);
+        } catch (err) {
+            console.log(err);
+        }
+
         reset();
     };
 

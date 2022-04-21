@@ -1,11 +1,9 @@
 /* eslint-disable camelcase */
 const mongoose = require('mongoose');
 
-const db_uri = 'mongodb://localhost:27017/chatty';
-
 const connectDb = async () => {
     try {
-        await mongoose.connect(db_uri, {
+        await mongoose.connect(process.env.DB_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
