@@ -7,6 +7,7 @@ const cors = require('cors');
 const port = process.env.PORT || 5000;
 const routes = require('./routes/index');
 const connectDb = require('./db/connectDb');
+const errorHandler = require('./middleware/error');
 
 app.use(express.json());
 app.use(cors());
@@ -20,6 +21,8 @@ app.get('/', (req, res) => {
 
 // all routes
 app.use('/api', routes);
+// error handler middleware
+app.use(errorHandler);
 
 app.listen(port, () => {
     console.log('listen on port....');
