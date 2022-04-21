@@ -1,12 +1,6 @@
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 
 function index() {
-    const router = useRouter();
-    useEffect(() => {
-        router.replace("/login");
-    }, []);
-
     return <div>index</div>;
 }
 
