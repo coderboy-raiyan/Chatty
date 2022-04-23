@@ -27,3 +27,12 @@ interface IRegister {
     confirmPassword: string;
     pic: string;
 }
+
+// Auth context interface
+
+interface IAuthContext {
+    user: {};
+    authLoading: boolean;
+    error: null;
+    register: (payload: any) => Promise<void>;
+}

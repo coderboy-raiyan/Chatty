@@ -3,9 +3,9 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+import useAuth from "hooks/useAuth";
 import React from "react";
 import { useForm } from "react-hook-form";
-import AuthHttpReq from "services/auth.service";
 
 const inputs: IRegisterInputs[] = [
     {
@@ -46,6 +46,7 @@ const inputs: IRegisterInputs[] = [
 
 function Register() {
     const { register, handleSubmit, reset } = useForm<IRegister>();
+    const { register: signUp, authLoading } = useAuth();
 
     const handelLogin = async (data: IRegister) => {
         const formData = new FormData();
@@ -55,12 +56,7 @@ function Register() {
         formData.append("image", data.pic[0]);
         // console.log(data.pic[0]);
 
-        try {
-            const data = await AuthHttpReq.register(formData);
-            console.log(data);
-        } catch (err) {
-            console.log(err);
-        }
+        await signUp(formData);
 
         reset();
     };
