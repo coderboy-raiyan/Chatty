@@ -6,6 +6,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+import LoadingBtn from "components/custom/LoadingBtn";
 import UnAuthenticatedLayout from "components/Layouts/UnAuthenticatedLayout";
 import useAuth from "hooks/useAuth";
 import Link from "next/link";
@@ -59,6 +60,7 @@ function Register() {
             return toast.error(`Password must be at least 6 characters !!!`, {
                 position: "bottom-center",
                 autoClose: 5000,
+                containerId: "global",
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -66,6 +68,7 @@ function Register() {
                 progress: undefined,
             });
         }
+
         if (data.password !== data.confirmPassword) {
             return toast.error(`Invalid confirm password !!!`, {
                 position: "bottom-center",
@@ -118,13 +121,20 @@ function Register() {
                         </label>
                     ))}
 
-                    <button
-                        disabled={authLoading}
-                        className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
-                        type="submit"
-                    >
-                        Sign Up
-                    </button>
+                    {authLoading ? (
+                        <LoadingBtn
+                            className="mr-2  inline-flex w-full items-center justify-center rounded-lg bg-indigo-500 py-2 text-sm  font-semibold text-white"
+                            text="Please wait..."
+                        />
+                    ) : (
+                        <button
+                            disabled={authLoading}
+                            className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
+                            type="submit"
+                        >
+                            Sign Up
+                        </button>
+                    )}
                     <p className="text-sm font-semibold">
                         Already have an account?{" "}
                         <Link href="/login">

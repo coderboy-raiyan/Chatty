@@ -6,6 +6,7 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+import LoadingBtn from "components/custom/LoadingBtn";
 import UnAuthenticatedLayout from "components/Layouts/UnAuthenticatedLayout";
 import useAuth from "hooks/useAuth";
 import Link from "next/link";
@@ -39,6 +40,7 @@ function login() {
             return toast.error(`Password must be at least 6 characters !!!`, {
                 position: "bottom-center",
                 autoClose: 5000,
+                containerId: "global",
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
@@ -46,6 +48,7 @@ function login() {
                 progress: undefined,
             });
         }
+
         await login(data);
 
         reset();
@@ -82,20 +85,30 @@ function login() {
                         </label>
                     ))}
 
-                    <button
-                        disabled={authLoading}
-                        className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
-                        type="submit"
-                    >
-                        Login
-                    </button>
-                    <button
-                        disabled={authLoading}
-                        className="w-full rounded-lg bg-red-500 py-3 text-sm font-semibold text-white"
-                        type="button"
-                    >
-                        Get guest user credentials
-                    </button>
+                    {authLoading ? (
+                        <LoadingBtn
+                            className="mr-2  inline-flex w-full items-center justify-center rounded-lg bg-indigo-500 py-2 text-sm  font-semibold text-white"
+                            text="Please wait..."
+                        />
+                    ) : (
+                        <>
+                            <button
+                                disabled={authLoading}
+                                className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
+                                type="submit"
+                            >
+                                Login
+                            </button>
+                            <button
+                                disabled={authLoading}
+                                className="w-full rounded-lg bg-red-500 py-3 text-sm font-semibold text-white"
+                                type="button"
+                            >
+                                Get guest user credentials
+                            </button>
+                        </>
+                    )}
+
                     <p className="text-sm font-semibold">
                         Don't have an account?{" "}
                         <Link href="/register">

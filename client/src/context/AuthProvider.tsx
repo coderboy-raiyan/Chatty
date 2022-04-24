@@ -24,6 +24,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                 localStorage.setItem("user", JSON.stringify(user.data));
                 toast.success("Logged in successfully", {
                     position: "bottom-center",
+                    containerId: "global",
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -37,6 +38,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             setError(message);
             toast.error(`${message} !!!`, {
                 position: "bottom-center",
+                containerId: "global",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -60,6 +62,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                 localStorage.setItem("user", JSON.stringify(user.data));
                 toast.success("Registration successful", {
                     position: "bottom-center",
+                    containerId: "global",
                     autoClose: 5000,
                     hideProgressBar: false,
                     closeOnClick: true,
@@ -73,6 +76,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             setError(message);
             toast.error(`${message} !!!`, {
                 position: "bottom-center",
+                containerId: "global",
                 autoClose: 5000,
                 hideProgressBar: false,
                 closeOnClick: true,
@@ -118,6 +122,8 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             {loading ? "loading..." : children}
             <ToastContainer
                 style={{ width: "400px" }}
+                enableMultiContainer
+                containerId="global"
                 position="bottom-center"
                 autoClose={5000}
                 hideProgressBar={false}
