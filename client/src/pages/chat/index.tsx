@@ -15,7 +15,11 @@ function chat() {
 
     console.log(chats);
 
-    return <div>chat</div>;
+    return (
+        <div>
+            <h1 className="my-4 text-center text-2xl">Chats</h1>
+        </div>
+    );
 }
 
 export default chat;

@@ -110,8 +110,8 @@ function Register() {
                             <input
                                 className="w-full rounded-lg border-gray-300 py-3"
                                 id={input.id}
+                                required={input.type !== "file"}
                                 type={input.type}
-                                required
                                 placeholder={input.placeholder}
                                 {...register(`${input.key}`)}
                             />

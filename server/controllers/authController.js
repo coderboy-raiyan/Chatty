@@ -10,13 +10,16 @@ module.exports.registerUser = AsyncErrorHandler(async (req, res, next) => {
     if (isUserExists) {
         return next(new ErrorHandler('User already exists'));
     }
+    console.log(req.file);
     try {
-        const upload = await cloudinary.uploader.upload(req.file.path, {
-            folder: `Chatty/profile/${req.body.name.trim().toLowerCase().slice(0, 10)}`,
-            resource_type: 'auto',
-        });
+        if (req.file) {
+            const upload = await cloudinary.uploader.upload(req.file.path, {
+                folder: `Chatty/profile/${req.body.email.trim().toLowerCase()}`,
+                resource_type: 'auto',
+            });
 
-        req.body.pic = upload.secure_url;
+            req.body.pic = upload.secure_url;
+        }
         const result = await User.create(req.body);
         if (result) {
             const token = await result.generateJwt();
@@ -33,7 +36,7 @@ module.exports.registerUser = AsyncErrorHandler(async (req, res, next) => {
             });
         }
     } catch (err) {
-        next(new ErrorHandler('There is an error'));
+        next(new ErrorHandler('There is an error in cloudinary'));
     }
 });
 
@@ -65,4 +68,23 @@ module.exports.loginUser = AsyncErrorHandler(async (req, res, next) => {
 });
 
 // get searched users
-module.exports.getUsers = AsyncErrorHandler(async (req, res, next) => {});
+module.exports.getUsers = AsyncErrorHandler(async (req, res) => {
+    const keyword = req.query.search
+        ? {
+              $or: [
+                  {
+                      name: { $regex: req.query.search, $options: 'i' },
+                  },
+                  {
+                      email: { $regex: req.query.search, $options: 'i' },
+                  },
+              ],
+          }
+        : {};
+
+    const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
+    res.status(200).send({
+        success: true,
+        data: users,
+    });
+});
