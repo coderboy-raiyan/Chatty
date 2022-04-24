@@ -117,7 +117,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         <AuthContext.Provider value={returnObj}>
             {loading ? "loading..." : children}
             <ToastContainer
-                className="w-[400px]"
+                style={{ width: "400px" }}
                 position="bottom-center"
                 autoClose={5000}
                 hideProgressBar={false}

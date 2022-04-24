@@ -63,3 +63,6 @@ module.exports.loginUser = AsyncErrorHandler(async (req, res, next) => {
         next(new ErrorHandler('Invalid email and password'));
     }
 });
+
+// get searched users
+module.exports.getUsers = AsyncErrorHandler(async (req, res, next) => {});
