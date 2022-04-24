@@ -6,11 +6,12 @@
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+import UnAuthenticatedLayout from "components/Layouts/UnAuthenticatedLayout";
 import useAuth from "hooks/useAuth";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 
 const inputs: ILoginInputs[] = [
     {
@@ -51,7 +52,7 @@ function login() {
     };
 
     return (
-        <section>
+        <UnAuthenticatedLayout title="Welcome Back - Chatty">
             <div
                 // style={{ backgroundImage: `url("${bgImage.src}")` }}
                 className="flex h-screen flex-col items-center justify-center bg-gradient-to-r from-sky-500 to-indigo-500 bg-cover bg-center bg-no-repeat px-4 py-10"
@@ -103,19 +104,7 @@ function login() {
                     </p>
                 </form>
             </div>
-            <ToastContainer
-                className="w-[400px]"
-                position="bottom-center"
-                autoClose={5000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-            />
-        </section>
+        </UnAuthenticatedLayout>
     );
 }
 

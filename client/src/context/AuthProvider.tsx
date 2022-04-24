@@ -2,14 +2,14 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-shadow */
 import React, { createContext, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import AuthHttpReq from "services/auth.service";
 
 export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState({});
+    const [user, setUser] = useState<IUser>({} as IUser);
     const [loading, setLoading] = useState(true);
     const [authLoading, setAuthLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -95,8 +95,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     // track the user
     useEffect(() => {
         const getUser: any = localStorage.getItem("user");
-        const user = JSON.parse(getUser);
-        setUser(user);
+        if (getUser) {
+            const user = JSON.parse(getUser);
+            setUser(user);
+        } else {
+            localStorage.setItem("user", JSON.stringify({}));
+        }
         setLoading(false);
     }, [authLoading]);
 
@@ -112,6 +116,18 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     return (
         <AuthContext.Provider value={returnObj}>
             {loading ? "loading..." : children}
+            <ToastContainer
+                className="w-[400px]"
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </AuthContext.Provider>
     );
 }

@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 /* eslint-disable no-unused-vars */
 interface ILoginInputs {
     id: string;
@@ -31,10 +32,18 @@ interface IRegister {
 // Auth context interface
 
 interface IAuthContext {
-    user: {};
+    user: IUser;
     authLoading: boolean;
     error: null;
     register: (payload: any) => Promise<void>;
     login: (payload: any) => Promise<void>;
     logout: (payload: any) => void;
+}
+
+// users value interface
+interface IUser {
+    email: string;
+    name: string;
+    pic: string;
+    token: string;
 }
