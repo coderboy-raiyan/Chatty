@@ -35,4 +35,6 @@ interface IAuthContext {
     authLoading: boolean;
     error: null;
     register: (payload: any) => Promise<void>;
+    login: (payload: any) => Promise<void>;
+    logout: (payload: any) => void;
 }

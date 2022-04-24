@@ -1,9 +1,16 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable no-shadow */
+/* eslint-disable consistent-return */
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
+import useAuth from "hooks/useAuth";
+import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 
 const inputs: ILoginInputs[] = [
     {
@@ -24,9 +31,22 @@ const inputs: ILoginInputs[] = [
 
 function login() {
     const { register, handleSubmit, reset } = useForm<ILogin>();
+    const { login, authLoading } = useAuth();
 
-    const handelLogin = (data: ILogin) => {
-        console.log(data);
+    const handelLogin = async (data: ILogin): Promise<void | string | number> => {
+        if (data.password.length < 6) {
+            return toast.error(`Password must be at least 6 characters !!!`, {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+        await login(data);
+
         reset();
     };
 
@@ -62,19 +82,39 @@ function login() {
                     ))}
 
                     <button
+                        disabled={authLoading}
                         className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
                         type="submit"
                     >
                         Login
                     </button>
                     <button
+                        disabled={authLoading}
                         className="w-full rounded-lg bg-red-500 py-3 text-sm font-semibold text-white"
                         type="button"
                     >
                         Get guest user credentials
                     </button>
+                    <p className="text-sm font-semibold">
+                        Don't have an account?{" "}
+                        <Link href="/register">
+                            <a className="text-indigo-500">Sign up</a>
+                        </Link>
+                    </p>
                 </form>
             </div>
+            <ToastContainer
+                className="w-[400px]"
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </section>
     );
 }

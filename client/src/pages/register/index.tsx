@@ -1,11 +1,16 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable consistent-return */
 /* eslint-disable no-shadow */
 /* eslint-disable no-undef */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable react/no-array-index-key */
 import useAuth from "hooks/useAuth";
+import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { toast, ToastContainer } from "react-toastify";
 
 const inputs: IRegisterInputs[] = [
     {
@@ -48,7 +53,30 @@ function Register() {
     const { register, handleSubmit, reset } = useForm<IRegister>();
     const { register: signUp, authLoading } = useAuth();
 
-    const handelLogin = async (data: IRegister) => {
+    const handelLogin = async (data: IRegister): Promise<void | string | number> => {
+        if (data.password.length < 6) {
+            return toast.error(`Password must be at least 6 characters !!!`, {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+        if (data.password !== data.confirmPassword) {
+            return toast.error(`Invalid confirm password !!!`, {
+                position: "bottom-center",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+
         const formData = new FormData();
         formData.append("email", data.email);
         formData.append("password", data.password);
@@ -90,13 +118,32 @@ function Register() {
                     ))}
 
                     <button
+                        disabled={authLoading}
                         className="w-full rounded-lg bg-indigo-500 py-3 text-sm font-semibold text-white"
                         type="submit"
                     >
                         Sign Up
                     </button>
+                    <p className="text-sm font-semibold">
+                        Already have an account?{" "}
+                        <Link href="/login">
+                            <a className="text-indigo-500">Sign in</a>
+                        </Link>
+                    </p>
                 </form>
             </div>
+            <ToastContainer
+                className="w-[400px]"
+                position="bottom-center"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
         </section>
     );
 }
