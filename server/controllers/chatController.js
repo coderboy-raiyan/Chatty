@@ -46,10 +46,23 @@ module.exports.accessChat = AsyncErrorHandler(async (req, res, next) => {
             console.log(createdChat);
             res.status(200).send(fullChat);
         } catch (error) {
-            next(new ErrorHandler(error));
+            next(new ErrorHandler(error.message));
         }
     }
 });
 
 // fetch chats
-module.exports.fetchChats = AsyncErrorHandler(async (req, res, next) => {});
+module.exports.fetchChats = AsyncErrorHandler(async (req, res) => {
+    const chats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+        .populate('users', '-password')
+        .populate('latestMessages')
+        .populate('groupAdmin', '-password')
+        .sort({ updatedAt: -1 });
+
+    const request = await User.populate(chats, {
+        path: 'latestMessages.sender',
+        select: 'email name pic',
+    });
+
+    res.send(request);
+});

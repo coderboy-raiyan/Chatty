@@ -1,8 +1,8 @@
 const router = require('express').Router();
 const verifyAuth = require('../middleware/authMiddleware');
-const { accessChat } = require('../controllers/chatController');
+const { accessChat, fetchChats } = require('../controllers/chatController');
 
-router.route('/').post(verifyAuth, accessChat);
+router.route('/').post(verifyAuth, accessChat).get(verifyAuth, fetchChats);
 // router.route("/group").post(createGroupChat)
 // router.router("/renameGroup").put(renameGroup)
 // router.route('/groupAdd').post(addToGroup)
