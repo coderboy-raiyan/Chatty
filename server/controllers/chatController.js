@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable prefer-const */
 /* eslint-disable no-underscore-dangle */
 
 const Chat = require('../models/Chat');
@@ -43,7 +45,7 @@ module.exports.accessChat = AsyncErrorHandler(async (req, res, next) => {
                 'users',
                 '-password',
             );
-            console.log(createdChat);
+
             res.status(200).send(fullChat);
         } catch (error) {
             next(new ErrorHandler(error.message));
@@ -65,4 +67,45 @@ module.exports.fetchChats = AsyncErrorHandler(async (req, res) => {
     });
 
     res.send(request);
+});
+
+// createGroup chat
+module.exports.createGroupChat = AsyncErrorHandler(async (req, res, next) => {
+    if (!req.body.users || !req.body.name) {
+        return next(new ErrorHandler('Please fill all the fields'));
+    }
+    // let users;
+    let users = JSON.parse(req.body.users);
+
+    if (users.length < 2) {
+        return next(new ErrorHandler('More then 2 users are required', 400));
+    }
+
+    users.push(req.user);
+
+    const grpChat = await Chat.create({
+        chatName: req.body.name,
+        isGroupChat: true,
+        users,
+        groupAdmin: req.user,
+    });
+    const fullGrpChat = await Chat.find({ _id: grpChat._id })
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password');
+
+    res.status(200).send(fullGrpChat);
+});
+
+// rename group
+module.exports.renameGroup = AsyncErrorHandler(async (req, res, next) => {
+    if (!req.body.chatName || !req.body.chatId) {
+        return next(new ErrorHandler('Please fill the necessary fields'));
+    }
+
+    const updatedName = await Chat.findByIdAndUpdate(
+        { _id: req.body.chatId },
+        { chatName: req.body.chatName },
+        { new: true },
+    );
+    res.status(200).send(updatedName);
 });
