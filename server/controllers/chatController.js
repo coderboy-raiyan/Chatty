@@ -109,3 +109,49 @@ module.exports.renameGroup = AsyncErrorHandler(async (req, res, next) => {
     );
     res.status(200).send(updatedName);
 });
+
+// Add to group
+module.exports.addToGroup = AsyncErrorHandler(async (req, res, next) => {
+    if (!req.body.userId || !req.body.chatId) {
+        return next(new ErrorHandler('Please fill the necessary fields'));
+    }
+
+    const added = await Chat.findByIdAndUpdate(
+        req.body.chatId,
+        {
+            $push: { users: req.body.userId },
+        },
+        { new: true },
+    )
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password');
+
+    if (!added) {
+        next(new ErrorHandler('Chat not found'));
+    } else {
+        res.status(200).send(added);
+    }
+});
+
+// Remove a user from group
+module.exports.removeFromGroup = AsyncErrorHandler(async (req, res, next) => {
+    if (!req.body.userId || !req.body.chatId) {
+        return next(new ErrorHandler('Please fill the necessary fields'));
+    }
+
+    const remove = await Chat.findByIdAndUpdate(
+        req.body.chatId,
+        {
+            $pull: { users: req.body.userId },
+        },
+        { new: true },
+    )
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password');
+
+    if (!remove) {
+        next(new ErrorHandler('Chat not found'));
+    } else {
+        res.status(200).send(remove);
+    }
+});
