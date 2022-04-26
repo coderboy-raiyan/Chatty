@@ -13,25 +13,32 @@ function chat() {
     const [toggleSideBar, setToggleSideBar] = useState(false);
 
     return (
-        <div onClick={() => setToggleSideBar(false)} className="h-screen bg-gray-100">
-            <Head>
-                <title>Start Chatting - Chatty</title>
-            </Head>
-
-            <Header setToggleSideBar={setToggleSideBar} />
-
+        <>
             <Sidebar toggleSideBar={toggleSideBar} />
-            {toggleSideBar && (
-                <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] bg-[rgba(0,0,0,.3)]" />
-            )}
+            <div
+                onClick={(e) => {
+                    e.stopPropagation();
+                    setToggleSideBar(false);
+                }}
+                className="h-screen bg-gray-100"
+            >
+                {toggleSideBar && (
+                    <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] bg-[rgba(0,0,0,.3)]" />
+                )}
+                <Head>
+                    <title>Start Chatting - Chatty</title>
+                </Head>
 
-            {/* main chats board */}
-            <div>
-                <ChatBox />
+                <Header setToggleSideBar={setToggleSideBar} />
 
-                <MyChat />
+                {/* main chats board */}
+                <div>
+                    <ChatBox />
+
+                    <MyChat />
+                </div>
             </div>
-        </div>
+        </>
     );
 }
 
