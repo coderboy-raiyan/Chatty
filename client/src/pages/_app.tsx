@@ -3,6 +3,7 @@
 // eslint-disable-next-line react/jsx-props-no-spreading
 import AuthenticatedLayout from "components/Layouts/AuthenticatedLayout";
 import AuthProvider from "context/AuthProvider";
+import ChatProvider from "context/ChatProvider";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 import "styles/globals.css";
@@ -13,13 +14,15 @@ function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
     return (
         <AuthProvider>
-            {noAuthRequired.includes(router.pathname) ? (
-                <Component {...pageProps} />
-            ) : (
-                <AuthenticatedLayout>
-                    <Component {...pageProps} />;
-                </AuthenticatedLayout>
-            )}
+            <ChatProvider>
+                {noAuthRequired.includes(router.pathname) ? (
+                    <Component {...pageProps} />
+                ) : (
+                    <AuthenticatedLayout>
+                        <Component {...pageProps} />
+                    </AuthenticatedLayout>
+                )}
+            </ChatProvider>
         </AuthProvider>
     );
 }
