@@ -93,6 +93,17 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = () => {
         setAuthLoading(true);
         localStorage.setItem("user", JSON.stringify({}));
+        setUser({} as IUser);
+        toast.success("Logged out successfully", {
+            position: "bottom-center",
+            containerId: "global",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
         setAuthLoading(false);
     };
 

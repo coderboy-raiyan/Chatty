@@ -1,17 +1,30 @@
+/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
 import useAuth from "hooks/useAuth";
 import React from "react";
 import { BiSearchAlt } from "react-icons/bi";
 import { MdNotifications } from "react-icons/md";
 
-function Header() {
-    const { user } = useAuth();
+function Header({
+    setToggleSideBar,
+}: {
+    setToggleSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+    const { user, logout } = useAuth();
     return (
         <header className="bg-white shadow">
             <div className="mx-4 py-2 md:max-w-6xl lg:mx-auto lg:max-w-7xl">
                 <nav className="flex items-center justify-between space-x-4">
                     {/* user search input */}
 
-                    <div className="flex w-[20%] cursor-pointer justify-center rounded py-2 px-2 transition-all hover:bg-gray-100">
+                    <div
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            setToggleSideBar(true);
+                        }}
+                        className="flex w-[20%] cursor-pointer justify-center rounded py-2 px-2 transition-all hover:bg-gray-100"
+                    >
                         <button type="button" className="text-2xl">
                             <BiSearchAlt />
                         </button>
@@ -36,9 +49,13 @@ function Header() {
                             <MdNotifications />
                         </li>
 
-                        <li>
+                        <li onClick={logout}>
                             <div>
-                                <img className=" w-8 rounded-full" src={user?.pic} alt="" />
+                                <img
+                                    className="h-10 w-10 cursor-pointer rounded-full object-contain"
+                                    src={user?.pic}
+                                    alt=""
+                                />
                             </div>
                         </li>
                     </ul>

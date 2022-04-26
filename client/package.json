@@ -12,7 +12,8 @@
         "react-dom": "^17.0.2",
         "react-hook-form": "^7.30.0",
         "react-icons": "^4.3.1",
-        "react-toastify": "^8.2.0"
+        "react-toastify": "^8.2.0",
+        "tw-elements": "^1.0.0-alpha12"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.0",
