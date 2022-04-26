@@ -13,6 +13,11 @@ class AuthReq {
         const { data } = await httpReq.post("/api/user/login", payload).then((data) => data);
         return data;
     }
+
+    async getUsers(search: string) {
+        const { data } = await httpReq.get(`/api/user?search=${search}`).then((data) => data);
+        return data;
+    }
 }
 
 const AuthHttpReq = new AuthReq();

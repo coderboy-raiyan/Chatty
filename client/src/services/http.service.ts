@@ -4,9 +4,18 @@
 // eslint-disable-next-line class-methods-use-this
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
+let token;
+
+if (typeof window !== "undefined") {
+    const getToken: any = localStorage.getItem("user");
+    token = JSON.parse(getToken);
+}
+
 const axiosConfig = {
-    baseURL: "http://localhost:5000",
-    // timeout: 4000,
+    baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+    headers: {
+        Authorization: token ? token.token : "",
+    },
 };
 
 const instance: AxiosInstance = axios.create(axiosConfig);

@@ -69,21 +69,20 @@ module.exports.loginUser = AsyncErrorHandler(async (req, res, next) => {
 
 // get searched users
 module.exports.getUsers = AsyncErrorHandler(async (req, res) => {
+    console.log('here', req.query);
     const keyword = req.query.search
         ? {
               $or: [
-                  {
-                      name: { $regex: req.query.search, $options: 'i' },
-                  },
-                  {
-                      email: { $regex: req.query.search, $options: 'i' },
-                  },
+                  { name: { $regex: req.query.search, $options: 'i' } },
+                  { email: { $regex: req.query.search, $options: 'i' } },
               ],
           }
         : {};
 
     const users = await User.find(keyword).find({ _id: { $ne: req.user._id } });
-    res.status(200).send({
+    console.log(keyword);
+
+    res.status(200).json({
         success: true,
         data: users,
     });

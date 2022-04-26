@@ -42,6 +42,7 @@ interface IAuthContext {
 
 // users value interface
 interface IUser {
+    _id?: string | undefined;
     email: string;
     name: string;
     pic: string;
