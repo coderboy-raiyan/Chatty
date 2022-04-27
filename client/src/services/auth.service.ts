@@ -14,8 +14,10 @@ class AuthReq {
         return data;
     }
 
-    async getUsers(search: string) {
-        const { data } = await httpReq.get(`/api/user?search=${search}`).then((data) => data);
+    async getUsers(search: string, config: any) {
+        const { data } = await httpReq
+            .get(`/api/user?search=${search}`, config)
+            .then((data) => data);
         return data;
     }
 }

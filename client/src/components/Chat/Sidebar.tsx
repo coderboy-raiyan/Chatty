@@ -1,12 +1,15 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable no-undef */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 import UserList from "components/UserList/UserList";
+import useAuth from "hooks/useAuth";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import AuthHttpReq from "services/auth.service";
 
 function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
+    const { user } = useAuth();
     const [search, setSearch] = useState("");
     const [searchLoading, setSearchLoading] = useState(false);
     const [users, setUsers] = useState<IUser[]>([] as IUser[]);
@@ -26,8 +29,14 @@ function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
         }
         setSearchLoading(true);
 
+        const config = {
+            headers: {
+                Authorization: user.token,
+            },
+        };
+
         try {
-            const { data } = await AuthHttpReq.getUsers(search);
+            const { data } = await AuthHttpReq.getUsers(search, config);
             console.log(data);
             setUsers(data);
         } catch (error: any) {
@@ -49,7 +58,7 @@ function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
         <div
             className={`${
                 toggleSideBar ? "left-0" : "-left-full"
-            } fixed top-0 z-[101] h-screen bg-white  shadow-xl transition-all lg:w-[300px]`}
+            } fixed top-0 z-[101] h-screen overflow-y-auto bg-white  shadow-xl transition-all lg:w-[300px]`}
         >
             <h1 className="border-b py-3 px-4 text-xl font-semibold text-gray-900">Search Users</h1>
 
@@ -73,6 +82,7 @@ function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
             </div>
 
             {/* show search results */}
+
             {searchLoading
                 ? "Loading"
                 : users.map((user) => (

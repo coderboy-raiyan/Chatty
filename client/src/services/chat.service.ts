@@ -10,6 +10,10 @@ class ChatReq {
         } = await httpReq.get("/api/chats").then((data) => data);
         return chats;
     }
+
+    // async accessChat(chatId:string) {
+    //     const data - await httpReq.post()
+    // }
 }
 
 const ChatsHttpReq = new ChatReq();

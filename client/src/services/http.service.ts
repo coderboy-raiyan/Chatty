@@ -4,40 +4,30 @@
 // eslint-disable-next-line class-methods-use-this
 import axios, { AxiosInstance, AxiosResponse } from "axios";
 
-let token;
-
-if (typeof window !== "undefined") {
-    const getToken: any = localStorage.getItem("user");
-    token = JSON.parse(getToken);
-}
-
 const axiosConfig = {
     baseURL: process.env.NEXT_PUBLIC_BASE_URL,
-    headers: {
-        Authorization: token ? token.token : "",
-    },
 };
 
 const instance: AxiosInstance = axios.create(axiosConfig);
 
 class Requests {
-    async get(url: string): Promise<AxiosResponse> {
-        const data = await instance.get(url).then((data) => data);
+    async get(url: string, config?: any): Promise<AxiosResponse> {
+        const data = await instance.get(url, config).then((data) => data);
         return data;
     }
 
-    async post(url: string, body: any): Promise<AxiosResponse> {
-        const data = await instance.post(url, body).then((data) => data);
+    async post(url: string, body: any, config?: any): Promise<AxiosResponse> {
+        const data = await instance.post(url, body, config).then((data) => data);
         return data;
     }
 
-    async put(url: string, body: any): Promise<AxiosResponse> {
-        const { data } = await instance.put(url, body).then((data) => data);
+    async put(url: string, body: any, config?: any): Promise<AxiosResponse> {
+        const { data } = await instance.put(url, body, config).then((data) => data);
         return data;
     }
 
-    async delete(url: string): Promise<AxiosResponse> {
-        const data = await instance.delete(url).then((data) => data);
+    async delete(url: string, config?: any): Promise<AxiosResponse> {
+        const data = await instance.delete(url, config).then((data) => data);
         return data;
     }
 }

@@ -104,6 +104,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             draggable: true,
             progress: undefined,
         });
+
         setAuthLoading(false);
     };
 
