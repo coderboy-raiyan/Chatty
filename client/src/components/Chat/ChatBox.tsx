@@ -1,7 +1,7 @@
 import React from "react";
 
 function ChatBox() {
-    return <div>ChatBox</div>;
+    return <div className="text-center">ChatBox</div>;
 }
 
 export default ChatBox;

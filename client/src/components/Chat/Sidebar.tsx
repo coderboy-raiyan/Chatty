@@ -1,17 +1,27 @@
+/* eslint-disable no-shadow */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable no-undef */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable consistent-return */
 import UserList from "components/UserList/UserList";
 import useAuth from "hooks/useAuth";
+import useChat from "hooks/useChat";
 import React, { useState } from "react";
 import { toast } from "react-toastify";
 import AuthHttpReq from "services/auth.service";
+import ChatsHttpReq from "services/chat.service";
 
-function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
-    const { user } = useAuth();
+function Sidebar({
+    toggleSideBar,
+    setToggleSideBar,
+}: {
+    toggleSideBar: boolean;
+    setToggleSideBar: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+    const { token } = useAuth();
+    const { setSelectedChat, chats, setChats } = useChat();
     const [search, setSearch] = useState("");
-    const [searchLoading, setSearchLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState<IUser[]>([] as IUser[]);
 
     const handelSearch = async (): Promise<string | undefined | number> => {
@@ -27,31 +37,71 @@ function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
                 progress: undefined,
             });
         }
-        setSearchLoading(true);
+        setLoading(true);
 
         const config = {
             headers: {
-                Authorization: user.token,
+                Authorization: token,
             },
         };
 
         try {
             const { data } = await AuthHttpReq.getUsers(search, config);
-            console.log(data);
             setUsers(data);
         } catch (error: any) {
-            setSearchLoading(false);
+            setLoading(false);
             const { message } = error.response.data;
-            console.log(message);
+            return toast.error(`${message} !!!`, {
+                position: "bottom-center",
+                containerId: "global",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
-        setSearchLoading(false);
+        setLoading(false);
 
         setSearch("");
     };
 
     // handel accessChat
-    const accessChat = (userId: string | undefined) => {
-        console.log(userId);
+    const accessChat = async (userId: string | undefined) => {
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: token,
+                },
+            };
+            const data: any = await ChatsHttpReq.accessChat(userId, config);
+
+            const isAlreadyInChat = chats.find((chat: any) => chat._id === data._id);
+            if (!isAlreadyInChat) {
+                setChats([data, ...chats]);
+            }
+
+            console.log(data);
+            setSelectedChat(data);
+            setToggleSideBar(false);
+        } catch (error: any) {
+            setLoading(false);
+            const { message } = error.response.data;
+            return toast.error(`${message} !!!`, {
+                position: "bottom-center",
+                containerId: "global",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+        setLoading(false);
     };
 
     return (
@@ -83,13 +133,15 @@ function Sidebar({ toggleSideBar }: { toggleSideBar: boolean }) {
 
             {/* show search results */}
 
-            {searchLoading
+            {loading
                 ? "Loading"
                 : users.map((user) => (
                       <div key={user._id}>
                           <UserList user={user} accessChat={() => accessChat(user._id)} />
                       </div>
                   ))}
+
+            {loading && "Chat loading..."}
         </div>
     );
 }

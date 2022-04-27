@@ -35,6 +35,7 @@ interface IAuthContext {
     user: IUser;
     authLoading: boolean;
     error: null;
+    token: string;
     register: (payload: any) => Promise<void>;
     login: (payload: any) => Promise<void>;
     logout: (payload: any) => void;

@@ -13,7 +13,12 @@ function UserList({
     accessChat: (userId: string | undefined) => void;
 }) {
     return (
-        <div>
+        <div
+            onClick={(e) => {
+                e.stopPropagation();
+                accessChat(user._id);
+            }}
+        >
             <div className="mx-4 my-4 flex cursor-pointer items-center space-x-4 rounded-lg bg-gray-100 py-4 px-4 hover:bg-gray-200">
                 {/* avatar */}
                 <div>

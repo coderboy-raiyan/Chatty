@@ -14,7 +14,7 @@ function chat() {
 
     return (
         <>
-            <Sidebar toggleSideBar={toggleSideBar} />
+            <Sidebar setToggleSideBar={setToggleSideBar} toggleSideBar={toggleSideBar} />
             <div
                 onClick={(e) => {
                     e.stopPropagation();
@@ -32,10 +32,14 @@ function chat() {
                 <Header setToggleSideBar={setToggleSideBar} />
 
                 {/* main chats board */}
-                <div>
-                    <ChatBox />
+                <div className="my-4 grid gap-x-4 lg:mx-auto lg:max-w-7xl lg:grid-cols-12">
+                    <div className="col-span-5 rounded-lg bg-white py-4 px-4 shadow">
+                        <MyChat />
+                    </div>
 
-                    <MyChat />
+                    <div className="col-span-7">
+                        <ChatBox />
+                    </div>
                 </div>
             </div>
         </>

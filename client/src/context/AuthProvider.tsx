@@ -10,6 +10,7 @@ export const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
 function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<IUser>({} as IUser);
+    const [token, setToken] = useState("");
     const [loading, setLoading] = useState(true);
     const [authLoading, setAuthLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -113,6 +114,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         const getUser: any = localStorage.getItem("user");
         if (getUser) {
             const user = JSON.parse(getUser);
+            setToken(user?.token);
             setUser(user);
         } else {
             localStorage.setItem("user", JSON.stringify({}));
@@ -124,6 +126,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         authLoading,
         error,
+        token,
         register,
         login,
         logout,

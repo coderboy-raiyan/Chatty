@@ -30,7 +30,7 @@ module.exports.accessChat = AsyncErrorHandler(async (req, res, next) => {
         select: 'email pic name',
     });
 
-    if (isChat.length < 0) {
+    if (isChat.length > 0) {
         res.send(isChat[0]);
     } else {
         const chatData = {

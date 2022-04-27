@@ -24,6 +24,7 @@ module.exports.registerUser = AsyncErrorHandler(async (req, res, next) => {
         if (result) {
             const token = await result.generateJwt();
             const data = {
+                _id: result._id,
                 email: result.email,
                 name: result.name,
                 pic: result.pic,
@@ -51,6 +52,7 @@ module.exports.loginUser = AsyncErrorHandler(async (req, res, next) => {
     if (isVerified) {
         const token = await user.generateJwt();
         const data = {
+            _id: user._id,
             email: user.email,
             name: user.name,
             pic: user.pic,

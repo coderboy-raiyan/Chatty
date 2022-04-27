@@ -52,7 +52,7 @@ function Header({
                         <li onClick={logout}>
                             <div>
                                 <img
-                                    className="h-10 w-10 cursor-pointer rounded-full object-contain"
+                                    className="h-10 w-10 cursor-pointer rounded-full object-cover"
                                     src={user?.pic}
                                     alt=""
                                 />

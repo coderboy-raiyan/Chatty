@@ -11,9 +11,15 @@ class ChatReq {
         return chats;
     }
 
-    // async accessChat(chatId:string) {
-    //     const data - await httpReq.post()
-    // }
+    async accessChat(userId: string | undefined, config: any) {
+        const { data } = await httpReq.post("/api/chat", { userId }, config).then((data) => data);
+        return data;
+    }
+
+    async fetchChats(config: any) {
+        const { data } = await httpReq.get("/api/chat", config).then((data) => data);
+        return data;
+    }
 }
 
 const ChatsHttpReq = new ChatReq();
