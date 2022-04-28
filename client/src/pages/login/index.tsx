@@ -9,10 +9,10 @@
 import LoadingBtn from "components/custom/LoadingBtn";
 import UnAuthenticatedLayout from "components/Layouts/UnAuthenticatedLayout";
 import useAuth from "hooks/useAuth";
+import useToast from "hooks/useToast";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 const inputs: ILoginInputs[] = [
     {
@@ -34,19 +34,12 @@ const inputs: ILoginInputs[] = [
 function login() {
     const { register, handleSubmit, reset } = useForm<ILogin>();
     const { login, authLoading } = useAuth();
+    const { error: errorToast } = useToast();
 
     const handelLogin = async (data: ILogin): Promise<void | string | number> => {
         if (data.password.length < 6) {
-            return toast.error(`Password must be at least 6 characters !!!`, {
-                position: "bottom-center",
-                autoClose: 5000,
-                containerId: "global",
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast("Password must be at least 6 characters");
+            return;
         }
 
         await login(data);

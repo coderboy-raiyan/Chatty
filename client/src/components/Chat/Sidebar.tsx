@@ -6,8 +6,8 @@
 import UserList from "components/UserList/UserList";
 import useAuth from "hooks/useAuth";
 import useChat from "hooks/useChat";
+import useToast from "hooks/useToast";
 import React, { useState } from "react";
-import { toast } from "react-toastify";
 import AuthHttpReq from "services/auth.service";
 import ChatsHttpReq from "services/chat.service";
 
@@ -23,19 +23,12 @@ function Sidebar({
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(false);
     const [users, setUsers] = useState<IUser[]>([] as IUser[]);
+    const { error: errorToast } = useToast();
 
     const handelSearch = async (): Promise<string | undefined | number> => {
         if (!search) {
-            return toast.error(`Please enter something in search !!!`, {
-                position: "bottom-center",
-                containerId: "global",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast("Please enter something in search");
+            return;
         }
         setLoading(true);
 
@@ -51,16 +44,7 @@ function Sidebar({
         } catch (error: any) {
             setLoading(false);
             const { message } = error.response.data;
-            return toast.error(`${message} !!!`, {
-                position: "bottom-center",
-                containerId: "global",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast(message);
         }
         setLoading(false);
 
@@ -90,16 +74,7 @@ function Sidebar({
         } catch (error: any) {
             setLoading(false);
             const { message } = error.response.data;
-            return toast.error(`${message} !!!`, {
-                position: "bottom-center",
-                containerId: "global",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast(message);
         }
         setLoading(false);
     };
@@ -136,9 +111,7 @@ function Sidebar({
             {loading
                 ? "Loading"
                 : users.map((user) => (
-                      <div key={user._id}>
-                          <UserList user={user} accessChat={() => accessChat(user._id)} />
-                      </div>
+                      <UserList user={user} handelFunc={() => accessChat(user._id)} />
                   ))}
 
             {loading && "Chat loading..."}

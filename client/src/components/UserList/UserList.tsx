@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react/require-default-props */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
@@ -5,18 +7,12 @@
 /* eslint-disable no-unused-vars */
 import React from "react";
 
-function UserList({
-    user,
-    accessChat,
-}: {
-    user: IUser;
-    accessChat: (userId: string | undefined) => void;
-}) {
+function UserList({ user, handelFunc }: { user: IUser; handelFunc: () => any }) {
     return (
         <div
             onClick={(e) => {
                 e.stopPropagation();
-                accessChat(user._id);
+                handelFunc();
             }}
         >
             <div className="mx-4 my-4 flex cursor-pointer items-center space-x-4 rounded-lg bg-gray-100 py-4 px-4 hover:bg-gray-200">
@@ -27,8 +23,8 @@ function UserList({
 
                 {/* user name and email */}
                 <div>
-                    <h1>{user.name}</h1>
-                    <h1 className="text-sm font-medium text-gray-500">
+                    <h1 className="text-sm">{user.name}</h1>
+                    <h1 className="text-xs font-medium text-gray-500">
                         <span className="font-semibold text-gray-800">Email</span> : {user.email}
                     </h1>
                 </div>

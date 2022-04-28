@@ -6,6 +6,7 @@
         "start": "next start"
     },
     "dependencies": {
+        "@headlessui/react": "^1.6.0",
         "axios": "^0.26.1",
         "next": "latest",
         "react": "^17.0.2",

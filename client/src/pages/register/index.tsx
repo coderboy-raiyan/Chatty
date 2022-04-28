@@ -9,10 +9,10 @@
 import LoadingBtn from "components/custom/LoadingBtn";
 import UnAuthenticatedLayout from "components/Layouts/UnAuthenticatedLayout";
 import useAuth from "hooks/useAuth";
+import useToast from "hooks/useToast";
 import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
 
 const inputs: IRegisterInputs[] = [
     {
@@ -54,31 +54,17 @@ const inputs: IRegisterInputs[] = [
 function Register() {
     const { register, handleSubmit, reset } = useForm<IRegister>();
     const { register: signUp, authLoading } = useAuth();
+    const { error: errorToast } = useToast();
 
     const handelLogin = async (data: IRegister): Promise<void | string | number> => {
         if (data.password.length < 6) {
-            return toast.error(`Password must be at least 6 characters !!!`, {
-                position: "bottom-center",
-                autoClose: 5000,
-                containerId: "global",
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast("Password must be at least 6 characters");
+            return;
         }
 
         if (data.password !== data.confirmPassword) {
-            return toast.error(`Invalid confirm password !!!`, {
-                position: "bottom-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast("Invalid confirm password");
+            return;
         }
 
         const formData = new FormData();

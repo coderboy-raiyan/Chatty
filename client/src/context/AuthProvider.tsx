@@ -1,8 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable react/jsx-no-constructed-context-values */
 /* eslint-disable no-shadow */
+import useToast from "hooks/useToast";
 import React, { createContext, useEffect, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import AuthHttpReq from "services/auth.service";
 
@@ -14,6 +15,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
     const [authLoading, setAuthLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { success, error: errorToast } = useToast();
 
     // login
     const login = async (payload: any) => {
@@ -23,30 +25,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             setError(null);
             if (user.success) {
                 localStorage.setItem("user", JSON.stringify(user.data));
-                toast.success("Logged in successfully", {
-                    position: "bottom-center",
-                    containerId: "global",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
+                success("Logged in successfully");
             }
         } catch (error: any) {
             const { message } = error.response.data;
             setError(message);
-            toast.error(`${message} !!!`, {
-                position: "bottom-center",
-                containerId: "global",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast(message);
             setAuthLoading(false);
         }
         setAuthLoading(false);
@@ -61,30 +45,12 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
             setError(null);
             if (user.success) {
                 localStorage.setItem("user", JSON.stringify(user.data));
-                toast.success("Registration successful", {
-                    position: "bottom-center",
-                    containerId: "global",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
+                success("Registration successful");
             }
         } catch (error: any) {
             const { message } = error.response.data;
             setError(message);
-            toast.error(`${message} !!!`, {
-                position: "bottom-center",
-                containerId: "global",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
+            errorToast(message);
             setAuthLoading(false);
         }
         setAuthLoading(false);
@@ -95,17 +61,7 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
         setAuthLoading(true);
         localStorage.setItem("user", JSON.stringify({}));
         setUser({} as IUser);
-        toast.success("Logged out successfully", {
-            position: "bottom-center",
-            containerId: "global",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-
+        success("Logged out successfully");
         setAuthLoading(false);
     };
 

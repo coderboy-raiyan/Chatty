@@ -1,15 +1,19 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-underscore-dangle */
+import GroupChatModel from "components/GroupChatModel/GroupChatModel";
 import useAuth from "hooks/useAuth";
 import useChat from "hooks/useChat";
-import React, { useEffect } from "react";
+import useToast from "hooks/useToast";
+import React, { useEffect, useState } from "react";
 import { BsPlusLg } from "react-icons/bs";
 import ChatsHttpReq from "services/chat.service";
 
 function MyChat() {
     const { token, user } = useAuth();
     const { selectedChat, setSelectedChat, setChats, chats } = useChat();
+    const [isModelOpen, setIsModelOpen] = useState(false);
+    const { error: errorToast } = useToast();
 
     const fetchChats = async () => {
         try {
@@ -24,10 +28,12 @@ function MyChat() {
             setChats(data);
         } catch (error: any) {
             const { message } = error.response.data;
+            errorToast(message);
             console.log(message);
         }
     };
 
+    // fetch chats
     useEffect(() => {
         fetchChats();
     }, []);
@@ -35,12 +41,21 @@ function MyChat() {
     const getSender = (loggedUser: any, users: any) =>
         users[0]._id === loggedUser._id ? users[1].name : users[0].name;
 
+    const closeModal = () => {
+        setIsModelOpen(false);
+    };
+
     return (
         <section>
+            <GroupChatModel isModelOpen={isModelOpen} closeModal={closeModal} />
             {/* my chat header */}
             <div className="my-4 flex justify-between">
                 <h1 className="text-2xl">My chats</h1>
                 <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsModelOpen(true);
+                    }}
                     type="button"
                     className="rounded bg-gray-100 py-2 px-3 text-sm hover:bg-gray-200"
                 >
