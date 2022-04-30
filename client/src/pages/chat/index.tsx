@@ -20,7 +20,7 @@ function chat() {
                     e.stopPropagation();
                     setToggleSideBar(false);
                 }}
-                className=" bg-gray-100"
+                className=" bg-white"
             >
                 {toggleSideBar && (
                     <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] bg-[rgba(0,0,0,.3)]" />
@@ -32,12 +32,13 @@ function chat() {
                 <Header setToggleSideBar={setToggleSideBar} />
 
                 {/* main chats board */}
-                <div className="grid h-screen gap-x-4 py-8 lg:mx-auto lg:max-w-7xl lg:grid-cols-12">
-                    <div className="col-span-5  rounded-lg bg-white py-4 px-4 shadow">
+
+                <div className="grid h-screen gap-x-4  lg:mx-4 lg:max-w-full lg:grid-cols-12">
+                    <div className="col-span-3 border-r px-2 ">
                         <MyChat />
                     </div>
 
-                    <div className="col-span-7">
+                    <div className="col-span-9">
                         <ChatBox />
                     </div>
                 </div>

@@ -53,7 +53,7 @@ function MyChat() {
             />
             {/* my chat header */}
             <div className="my-4 flex justify-between">
-                <h1 className="text-2xl">My chats</h1>
+                <h1 className="text-2xl font-semibold">chats</h1>
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
@@ -74,21 +74,38 @@ function MyChat() {
                         <div
                             className={`${
                                 selectedChat === chat ? "bg-indigo-500 text-white" : " bg-gray-100"
-                            } my-3 cursor-pointer rounded px-4 py-4 transition`}
+                            } my-3 cursor-pointer rounded px-2 py-4 transition`}
                             onClick={() => setSelectedChat(chat)}
                             key={chat._id}
                         >
-                            {chat.isGroupChat ? (
-                                <p>{chat.chatName}</p>
-                            ) : (
-                                <p>
-                                    {chat?.users?.filter(
-                                        (thatUser: any) => thatUser._id === user._id
-                                    )
-                                        ? chat.users[1].name
-                                        : chat.user[0].name}
-                                </p>
-                            )}
+                            <div className="flex space-x-2 text-ellipsis">
+                                {!chat.isGroupChat ? (
+                                    <img
+                                        className="flex h-10 w-10 rounded-full object-cover"
+                                        src={
+                                            chat?.users?.filter(
+                                                (thatUser: any) => thatUser._id === user._id
+                                            )
+                                                ? chat.users[1].pic
+                                                : chat.user[0].pic
+                                        }
+                                        alt=""
+                                    />
+                                ) : (
+                                    <img src="" alt="" />
+                                )}
+                                {chat.isGroupChat ? (
+                                    <p>{chat.chatName}</p>
+                                ) : (
+                                    <p>
+                                        {chat?.users?.filter(
+                                            (thatUser: any) => thatUser._id === user._id
+                                        )
+                                            ? chat.users[1].name
+                                            : chat.user[0].name}
+                                    </p>
+                                )}
+                            </div>
                         </div>
                     ))
                 ) : (

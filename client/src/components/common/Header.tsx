@@ -13,7 +13,7 @@ function Header({
 }) {
     const { user, logout } = useAuth();
     return (
-        <header className="bg-white shadow">
+        <header className="border-b bg-white shadow">
             <div className="mx-4 py-2 md:max-w-6xl lg:mx-auto lg:max-w-7xl">
                 <nav className="flex items-center justify-between space-x-4">
                     {/* user search input */}
