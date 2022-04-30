@@ -1,3 +1,5 @@
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-expressions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-underscore-dangle */
@@ -11,7 +13,7 @@ import ChatsHttpReq from "services/chat.service";
 
 function MyChat() {
     const { token, user } = useAuth();
-    const { selectedChat, setSelectedChat, setChats, chats } = useChat();
+    const { selectedChat, setSelectedChat, setChats, chats, chatLoading } = useChat();
     const [isModelOpen, setIsModelOpen] = useState(false);
     const { error: errorToast } = useToast();
 
@@ -36,10 +38,7 @@ function MyChat() {
     // fetch chats
     useEffect(() => {
         fetchChats();
-    }, []);
-
-    const getSender = (loggedUser: any, users: any) =>
-        users[0]._id === loggedUser._id ? users[1].name : users[0].name;
+    }, [chatLoading]);
 
     const closeModal = () => {
         setIsModelOpen(false);
@@ -47,7 +46,11 @@ function MyChat() {
 
     return (
         <section>
-            <GroupChatModel isModelOpen={isModelOpen} closeModal={closeModal} />
+            <GroupChatModel
+                setIsModelOpen={setIsModelOpen}
+                isModelOpen={isModelOpen}
+                closeModal={closeModal}
+            />
             {/* my chat header */}
             <div className="my-4 flex justify-between">
                 <h1 className="text-2xl">My chats</h1>
@@ -75,7 +78,17 @@ function MyChat() {
                             onClick={() => setSelectedChat(chat)}
                             key={chat._id}
                         >
-                            <p>{!chat.isGroupChat ? getSender(user, chat.users) : chat.chatName}</p>
+                            {chat.isGroupChat ? (
+                                <p>{chat.chatName}</p>
+                            ) : (
+                                <p>
+                                    {chat?.users?.filter(
+                                        (thatUser: any) => thatUser._id === user._id
+                                    )
+                                        ? chat.users[1].name
+                                        : chat.user[0].name}
+                                </p>
+                            )}
                         </div>
                     ))
                 ) : (

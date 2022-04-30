@@ -5,4 +5,6 @@ interface IChatContext {
     chats: any;
     setChats: React.Dispatch<React.SetStateAction<any>>;
     setSelectedChat: React.Dispatch<React.SetStateAction<any>>;
+    setChatLoading: React.Dispatch<React.SetStateAction<boolean>>;
+    chatLoading: boolean;
 }

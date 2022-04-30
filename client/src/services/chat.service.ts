@@ -13,6 +13,13 @@ class ChatReq {
         const { data } = await httpReq.get("/api/chat", config).then((data) => data);
         return data;
     }
+
+    async createGroupChat(payload: any, config: any) {
+        const { data } = await httpReq
+            .post("/api/chat/group", payload, config)
+            .then((data) => data);
+        return data;
+    }
 }
 
 const ChatsHttpReq = new ChatReq();

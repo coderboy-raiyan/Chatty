@@ -3,6 +3,8 @@ const app = require('express')();
 const express = require('express');
 require('dotenv').config();
 const cors = require('cors');
+const http = require('http');
+const { Server } = require('socket.io');
 
 const port = process.env.PORT || 5000;
 const routes = require('./routes/index');
@@ -11,6 +13,33 @@ const errorHandler = require('./middleware/error');
 
 app.use(express.json());
 app.use(cors());
+
+const server = http.createServer(app);
+
+const io = new Server(server, {
+    cors: {
+        origin: '*',
+    },
+});
+
+io.on('connection', (socket) => {
+    // console.log(socket.id);
+
+    console.log('connected', socket.id);
+
+    socket.on('join_room', (data) => {
+        socket.join(data);
+        console.log(`User joined in this room ${data}`);
+    });
+
+    socket.on('send_message', (data) => {
+        socket.to(data.room).emit('receive_message', data);
+    });
+
+    socket.on('disconnect', () => {
+        console.log('disconnected', socket.id);
+    });
+});
 
 // db connect
 connectDb();
@@ -26,6 +55,6 @@ app.use('/api', routes);
 
 app.use(errorHandler);
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log('listen on port....');
 });
