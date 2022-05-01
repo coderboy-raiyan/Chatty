@@ -3,7 +3,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-underscore-dangle */
-import GroupChatModel from "components/GroupChatModel/GroupChatModel";
+import { getSenderImage, getSenderName } from "components/ChatLogic/ChatLogic";
+import GroupChatModel from "components/Modals/GroupChatModel/GroupChatModel";
 import useAuth from "hooks/useAuth";
 import useChat from "hooks/useChat";
 import useToast from "hooks/useToast";
@@ -17,26 +18,25 @@ function MyChat() {
     const [isModelOpen, setIsModelOpen] = useState(false);
     const { error: errorToast } = useToast();
 
-    const fetchChats = async () => {
-        try {
-            const config = {
-                headers: {
-                    Authorization: token,
-                },
-            };
-
-            const data = await ChatsHttpReq.fetchChats(config);
-            console.log(data);
-            setChats(data);
-        } catch (error: any) {
-            const { message } = error.response.data;
-            errorToast(message);
-            console.log(message);
-        }
-    };
-
     // fetch chats
     useEffect(() => {
+        const fetchChats = async () => {
+            try {
+                const config = {
+                    headers: {
+                        Authorization: token,
+                    },
+                };
+
+                const data = await ChatsHttpReq.fetchChats(config);
+                console.log(data);
+                setChats(data);
+            } catch (error: any) {
+                const { message } = error.response.data;
+                errorToast(message);
+                console.log(message);
+            }
+        };
         fetchChats();
     }, [chatLoading]);
 
@@ -79,32 +79,21 @@ function MyChat() {
                             key={chat._id}
                         >
                             <div className="flex space-x-2 text-ellipsis">
-                                {!chat.isGroupChat ? (
+                                {!chat.isGroupChat && (
                                     <img
                                         className="flex h-10 w-10 rounded-full object-cover"
                                         src={
-                                            chat?.users?.filter(
-                                                (thatUser: any) => thatUser._id === user._id
-                                            )
-                                                ? chat.users[1].pic
-                                                : chat.user[0].pic
+                                            chat.isGroupChat ? "" : getSenderImage(user, chat.users)
                                         }
                                         alt=""
                                     />
-                                ) : (
-                                    <img src="" alt="" />
                                 )}
-                                {chat.isGroupChat ? (
-                                    <p>{chat.chatName}</p>
-                                ) : (
-                                    <p>
-                                        {chat?.users?.filter(
-                                            (thatUser: any) => thatUser._id === user._id
-                                        )
-                                            ? chat.users[1].name
-                                            : chat.user[0].name}
-                                    </p>
-                                )}
+
+                                <p>
+                                    {chat.isGroupChat
+                                        ? chat.chatName
+                                        : getSenderName(user, chat.users)}
+                                </p>
                             </div>
                         </div>
                     ))

@@ -12,9 +12,9 @@ import { Fragment, useState } from "react";
 import { AiFillCloseCircle } from "react-icons/ai";
 import AuthHttpReq from "services/auth.service";
 import ChatsHttpReq from "services/chat.service";
-import useChat from "../../hooks/useChat";
+import useChat from "../../../hooks/useChat";
 
-function GroupChatModel({
+function UpdateGroupModal({
     isModelOpen,
     setIsModelOpen,
     closeModal,
@@ -30,7 +30,7 @@ function GroupChatModel({
     const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
     const { success, info, error: errorToast } = useToast();
-    const { setChatLoading } = useChat();
+    const { setChats, chats } = useChat();
 
     const handelSearch = async (query: string) => {
         setSearch(query);
@@ -61,8 +61,9 @@ function GroupChatModel({
     // form submit button
     const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setChatLoading(true);
+
         if (groupChatName !== "" && selectedUsers.length > 0) {
+            setLoading(true);
             try {
                 const config = {
                     headers: {
@@ -75,16 +76,16 @@ function GroupChatModel({
                     name: groupChatName,
                     users: JSON.stringify(usersId),
                 };
-                await ChatsHttpReq.createGroupChat(grpData, config);
+                const data = await ChatsHttpReq.createGroupChat(grpData, config);
+                setChats([data, ...chats]);
                 success("Group has been created successfully");
                 setIsModelOpen(false);
             } catch (error: any) {
                 const { message } = error.response.data;
                 errorToast(message);
                 setLoading(false);
-                setChatLoading(false);
             }
-            setChatLoading(false);
+            setLoading(false);
         } else {
             info("Please fill the necessary fields", "top-left");
         }
@@ -218,4 +219,4 @@ function GroupChatModel({
     );
 }
 
-export default GroupChatModel;
+export default UpdateGroupModal;

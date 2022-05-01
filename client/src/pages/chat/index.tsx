@@ -33,9 +33,11 @@ function chat() {
 
                 {/* main chats board */}
 
-                <div className="grid h-screen gap-x-4  lg:mx-4 lg:max-w-full lg:grid-cols-12">
-                    <div className="col-span-3 border-r px-2 ">
-                        <MyChat />
+                <div className="grid lg:max-w-full lg:grid-cols-12">
+                    <div className="col-span-3  border-r px-2 ">
+                        <div className="h-screen overflow-y-auto">
+                            <MyChat />
+                        </div>
                     </div>
 
                     <div className="col-span-9">

@@ -89,7 +89,7 @@ module.exports.createGroupChat = AsyncErrorHandler(async (req, res, next) => {
         users,
         groupAdmin: req.user,
     });
-    const fullGrpChat = await Chat.find({ _id: grpChat._id })
+    const fullGrpChat = await Chat.findOne({ _id: grpChat._id })
         .populate('users', '-password')
         .populate('groupAdmin', '-password');
 
