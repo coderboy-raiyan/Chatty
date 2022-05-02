@@ -16,7 +16,7 @@ function UserBadge({
     return (
         <div
             className={`${
-                users.length > 4
+                users?.length > 4
                     ? "flex-wrap justify-evenly space-y-2 space-x-0"
                     : "flex-nowrap space-x-4 space-y-0"
             } my-4 flex `}

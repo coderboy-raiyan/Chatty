@@ -28,6 +28,22 @@ class ChatReq {
 
         return data;
     }
+
+    async addToGroup(payload: any, config: any) {
+        const data = await httpReq
+            .put("/api/chat/addToGroup", payload, config)
+            .then((data) => data);
+
+        return data;
+    }
+
+    async removeFromGroup(payload: any, config: any) {
+        const data = await httpReq
+            .put("/api/chat/removeFromGroup", payload, config)
+            .then((data) => data);
+
+        return data;
+    }
 }
 
 const ChatsHttpReq = new ChatReq();

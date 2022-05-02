@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable no-underscore-dangle */
@@ -6,9 +7,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 import { Dialog, Transition } from "@headlessui/react";
 import UserBadge from "components/molecules/UserBedge/UserBadge";
+import UserList from "components/molecules/UserList/UserList";
 import useAuth from "hooks/useAuth";
 import useToast from "hooks/useToast";
 import { Fragment, useState } from "react";
+import AuthHttpReq from "services/auth.service";
 import ChatsHttpReq from "services/chat.service";
 import useChat from "../../../hooks/useChat";
 
@@ -21,11 +24,12 @@ function UpdateGroupModal({
     closeModal: () => void;
     setIsModelOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const [groupChatName, setGroupChatName] = useState("");
     const [loading, setLoading] = useState(false);
     const [search, setSearch] = useState("");
-    const { success, info, error: errorToast } = useToast();
+    const { success, error: errorToast } = useToast();
+    const [searchResults, setSearchResults] = useState([]);
     const { selectedChat, setChatLoading, chatLoading, setSelectedChat } = useChat();
 
     // form submit button
@@ -33,9 +37,65 @@ function UpdateGroupModal({
         e.preventDefault();
     };
 
-    const handelSearch = (query: string) => {
+    const handelGroupAdd = async (selectUser: any) => {
+        const isAlreadyInGroup = selectedChat.users.find((u: any) => u._id === selectUser._id);
+        if (isAlreadyInGroup) {
+            errorToast("User already in the group", "top-left");
+            return;
+        }
+        const isAdmin = selectedChat.groupAdmin._id !== user._id;
+        if (isAdmin) {
+            errorToast("Only admin can add users", "top-left");
+            return;
+        }
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    Authorization: token,
+                },
+            };
+
+            const data = await ChatsHttpReq.addToGroup(
+                { userId: selectUser._id, chatId: selectedChat._id },
+                config
+            );
+            success("Successfully added user", "top-left");
+            setChatLoading(!chatLoading);
+            setSelectedChat(data);
+            setIsModelOpen(false);
+        } catch (error: any) {
+            const { message } = error.response.data;
+            errorToast(message, "top-left");
+            setLoading(false);
+        }
+        setLoading(false);
+    };
+
+    const handelSearch = async (query: string) => {
         setSearch(query);
-        console.log(query);
+
+        if (!query) {
+            errorToast("Please enter something to search", "top-left");
+            return;
+        }
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    Authorization: token,
+                },
+            };
+
+            const { data } = await AuthHttpReq.getUsers(query, config);
+
+            setSearchResults(data);
+        } catch (error: any) {
+            const { message } = error.response.data;
+            errorToast(message);
+            setLoading(false);
+        }
+        setLoading(false);
     };
 
     const handelRename = async () => {
@@ -57,15 +117,56 @@ function UpdateGroupModal({
 
             setChatLoading(!chatLoading);
             setSelectedChat(data);
+            setIsModelOpen(false);
         } catch (error: any) {
             const { message } = error.response.data;
-            console.log(message);
             errorToast(message, "top-left");
             setLoading(false);
         }
         setLoading(false);
     };
-    console.log(selectedChat);
+
+    const handelDelete = async (userId: string) => {
+        const isExists = selectedChat.users.find((user: any) => user._id === userId);
+
+        if (!isExists) {
+            errorToast("User does not exists", "top-left");
+            return;
+        }
+        const isAdmin = selectedChat.groupAdmin._id !== user._id;
+        if (isAdmin) {
+            errorToast("Only admin can remove users", "top-left");
+            return;
+        }
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    Authorization: token,
+                },
+            };
+
+            const data = await ChatsHttpReq.removeFromGroup(
+                { userId, chatId: selectedChat._id },
+                config
+            );
+            if (userId === user._id) {
+                success("Successfully leaved the group", "top-left");
+                setSelectedChat({});
+            } else {
+                success("Successfully removed a user", "top-left");
+                setSelectedChat(data);
+            }
+
+            setChatLoading(!chatLoading);
+            setIsModelOpen(false);
+        } catch (error: any) {
+            const { message } = error.response.data;
+            errorToast(message, "top-left");
+            setLoading(false);
+        }
+        setLoading(false);
+    };
 
     return (
         <div>
@@ -113,7 +214,10 @@ function UpdateGroupModal({
 
                                 {/* users add batch */}
 
-                                <UserBadge users={selectedChat?.users} />
+                                <UserBadge
+                                    handelDelete={handelDelete}
+                                    users={selectedChat?.users}
+                                />
 
                                 <form className="space-y-4" onSubmit={handelSubmit}>
                                     <input
@@ -129,9 +233,11 @@ function UpdateGroupModal({
                                             className="w-full rounded border-none ring-2 ring-indigo-500 focus:ring-2"
                                             type="text"
                                             onChange={(e) => setGroupChatName(e.target.value)}
+                                            defaultValue={selectedChat.chatName}
                                             placeholder="Chat name"
                                         />
                                         <button
+                                            disabled={loading}
                                             onClick={handelRename}
                                             className="rounded bg-green-500 px-4 text-white"
                                             type="button"
@@ -139,15 +245,26 @@ function UpdateGroupModal({
                                             Update
                                         </button>
                                     </div>
-                                    <button
-                                        className="w-full rounded bg-indigo-500 py-2 text-white"
-                                        type="submit"
-                                    >
-                                        Save
-                                    </button>
+                                    {/* render users */}
+                                    {searchResults.length > 0 && (
+                                        <div className="h-[300px] overflow-y-auto">
+                                            {loading
+                                                ? "loading"
+                                                : searchResults.map((user: any) => (
+                                                      <UserList
+                                                          key={user._id}
+                                                          user={user}
+                                                          handelFunc={() => handelGroupAdd(user)}
+                                                      />
+                                                  ))}
+                                        </div>
+                                    )}
+
                                     <button
                                         className="w-full rounded bg-red-500 py-2 text-white"
-                                        type="submit"
+                                        type="button"
+                                        disabled={loading}
+                                        onClick={() => handelDelete(user._id!)}
                                     >
                                         Leave
                                     </button>
