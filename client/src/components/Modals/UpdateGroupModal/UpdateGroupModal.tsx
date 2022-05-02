@@ -32,11 +32,6 @@ function UpdateGroupModal({
     const [searchResults, setSearchResults] = useState([]);
     const { selectedChat, setChatLoading, chatLoading, setSelectedChat } = useChat();
 
-    // form submit button
-    const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-    };
-
     const handelGroupAdd = async (selectUser: any) => {
         const isAlreadyInGroup = selectedChat.users.find((u: any) => u._id === selectUser._id);
         if (isAlreadyInGroup) {
@@ -219,7 +214,7 @@ function UpdateGroupModal({
                                     users={selectedChat?.users}
                                 />
 
-                                <form className="space-y-4" onSubmit={handelSubmit}>
+                                <form className="space-y-4">
                                     <input
                                         className="w-full rounded border-none ring-2 ring-indigo-500 focus:ring-2"
                                         type="text"
