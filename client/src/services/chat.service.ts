@@ -20,6 +20,14 @@ class ChatReq {
             .then((data) => data);
         return data;
     }
+
+    async renameGroup(payload: any, config: any) {
+        const data = await httpReq
+            .put("/api/chat/renameGroup", payload, config)
+            .then((data) => data);
+
+        return data;
+    }
 }
 
 const ChatsHttpReq = new ChatReq();

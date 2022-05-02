@@ -5,11 +5,11 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/react-in-jsx-scope */
 import { Dialog, Transition } from "@headlessui/react";
-import UserList from "components/UserList/UserList";
+import UserBadge from "components/molecules/UserBedge/UserBadge";
+import UserList from "components/molecules/UserList/UserList";
 import useAuth from "hooks/useAuth";
 import useToast from "hooks/useToast";
 import { Fragment, useState } from "react";
-import { AiFillCloseCircle } from "react-icons/ai";
 import AuthHttpReq from "services/auth.service";
 import ChatsHttpReq from "services/chat.service";
 import useChat from "../../../hooks/useChat";
@@ -48,7 +48,7 @@ function GroupChatModel({
             };
 
             const { data } = await AuthHttpReq.getUsers(query, config);
-            console.log(data);
+
             setSearchResults(data);
         } catch (error: any) {
             const { message } = error.response.data;
@@ -105,8 +105,6 @@ function GroupChatModel({
         const deleted = selectedUsers.filter((user) => user._id !== userId);
         setSelectedUsers(deleted);
     };
-
-    console.log(selectedUsers);
 
     return (
         <div>
@@ -171,22 +169,12 @@ function GroupChatModel({
                                     />
                                     {/* users add batch */}
                                     <div className="flex  space-x-2">
-                                        {selectedUsers.map((user) => (
-                                            <div
-                                                className="w-46 relative rounded bg-indigo-400 px-4 py-1 text-white"
-                                                key={user._id}
-                                            >
-                                                <p className="text-sm font-semibold">
-                                                    {user.name.slice(0, 10)}
-                                                </p>
-                                                <span
-                                                    onClick={() => handelDelete(user._id)}
-                                                    className="absolute -top-3 right-1 w-3 cursor-pointer text-lg"
-                                                >
-                                                    <AiFillCloseCircle className="inline" />
-                                                </span>
-                                            </div>
-                                        ))}
+                                        {selectedUsers.length > 0 && (
+                                            <UserBadge
+                                                users={selectedUsers}
+                                                handelDelete={handelDelete}
+                                            />
+                                        )}
                                     </div>
                                     {/* render users */}
                                     {searchResults.length > 0 && (

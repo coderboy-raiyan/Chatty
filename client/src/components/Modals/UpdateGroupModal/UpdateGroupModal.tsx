@@ -5,12 +5,10 @@
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable react/react-in-jsx-scope */
 import { Dialog, Transition } from "@headlessui/react";
-import UserList from "components/UserList/UserList";
+import UserBadge from "components/molecules/UserBedge/UserBadge";
 import useAuth from "hooks/useAuth";
 import useToast from "hooks/useToast";
 import { Fragment, useState } from "react";
-import { AiFillCloseCircle } from "react-icons/ai";
-import AuthHttpReq from "services/auth.service";
 import ChatsHttpReq from "services/chat.service";
 import useChat from "../../../hooks/useChat";
 
@@ -25,88 +23,49 @@ function UpdateGroupModal({
 }) {
     const { token } = useAuth();
     const [groupChatName, setGroupChatName] = useState("");
-    const [selectedUsers, setSelectedUsers] = useState<any[]>([]);
-    const [search, setSearch] = useState("");
-    const [searchResults, setSearchResults] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [search, setSearch] = useState("");
     const { success, info, error: errorToast } = useToast();
-    const { setChats, chats } = useChat();
+    const { selectedChat, setChatLoading, chatLoading, setSelectedChat } = useChat();
 
-    const handelSearch = async (query: string) => {
+    // form submit button
+    const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+    };
+
+    const handelSearch = (query: string) => {
         setSearch(query);
+        console.log(query);
+    };
 
-        if (!query) {
-            errorToast("Please enter something to search", "top-left");
+    const handelRename = async () => {
+        if (groupChatName === "") {
+            errorToast("Chat name is empty!", "top-left");
             return;
         }
         setLoading(true);
         try {
             const config = {
-                headers: {
-                    Authorization: token,
-                },
+                "content-type": "application/json",
+                headers: { Authorization: token },
             };
 
-            const { data } = await AuthHttpReq.getUsers(query, config);
-            console.log(data);
-            setSearchResults(data);
+            const data = await ChatsHttpReq.renameGroup(
+                { chatName: groupChatName, chatId: selectedChat._id },
+                config
+            );
+
+            setChatLoading(!chatLoading);
+            setSelectedChat(data);
         } catch (error: any) {
             const { message } = error.response.data;
-            errorToast(message);
+            console.log(message);
+            errorToast(message, "top-left");
             setLoading(false);
         }
         setLoading(false);
     };
-
-    // form submit button
-    const handelSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-
-        if (groupChatName !== "" && selectedUsers.length > 0) {
-            setLoading(true);
-            try {
-                const config = {
-                    headers: {
-                        Authorization: token,
-                    },
-                };
-                const usersId = selectedUsers.map((user) => user._id);
-
-                const grpData = {
-                    name: groupChatName,
-                    users: JSON.stringify(usersId),
-                };
-                const data = await ChatsHttpReq.createGroupChat(grpData, config);
-                setChats([data, ...chats]);
-                success("Group has been created successfully");
-                setIsModelOpen(false);
-            } catch (error: any) {
-                const { message } = error.response.data;
-                errorToast(message);
-                setLoading(false);
-            }
-            setLoading(false);
-        } else {
-            info("Please fill the necessary fields", "top-left");
-        }
-    };
-
-    // handel group add
-    const handelGroupAdd = (user: any) => {
-        if (selectedUsers.includes(user)) {
-            errorToast("User already added", "top-left");
-            return;
-        }
-        setSelectedUsers([...selectedUsers, user]);
-    };
-
-    // handel delete
-    const handelDelete = (userId: string) => {
-        const deleted = selectedUsers.filter((user) => user._id !== userId);
-        setSelectedUsers(deleted);
-    };
-
-    console.log(selectedUsers);
+    console.log(selectedChat);
 
     return (
         <div>
@@ -152,16 +111,11 @@ function UpdateGroupModal({
                                     Create Group Chat
                                 </Dialog.Title>
 
-                                {/* input boxes */}
-                                <form onSubmit={handelSubmit} className="my-5 space-y-4">
-                                    <input
-                                        className="w-full rounded border-none ring-2 ring-indigo-500 focus:ring-2"
-                                        type="text"
-                                        value={groupChatName}
-                                        onChange={(e) => setGroupChatName(e.target.value)}
-                                        placeholder="Chat Name"
-                                        required
-                                    />
+                                {/* users add batch */}
+
+                                <UserBadge users={selectedChat?.users} />
+
+                                <form className="space-y-4" onSubmit={handelSubmit}>
                                     <input
                                         className="w-full rounded border-none ring-2 ring-indigo-500 focus:ring-2"
                                         type="text"
@@ -169,45 +123,33 @@ function UpdateGroupModal({
                                         onChange={(e) => handelSearch(e.target.value)}
                                         placeholder="Add User here eg. Jhon"
                                     />
-                                    {/* users add batch */}
-                                    <div className="flex  space-x-2">
-                                        {selectedUsers.map((user) => (
-                                            <div
-                                                className="w-46 relative rounded bg-indigo-400 px-4 py-1 text-white"
-                                                key={user._id}
-                                            >
-                                                <p className="text-sm font-semibold">
-                                                    {user.name.slice(0, 10)}
-                                                </p>
-                                                <span
-                                                    onClick={() => handelDelete(user._id)}
-                                                    className="absolute -top-3 right-1 w-3 cursor-pointer text-lg"
-                                                >
-                                                    <AiFillCloseCircle className="inline" />
-                                                </span>
-                                            </div>
-                                        ))}
+                                    {/* update groupName */}
+                                    <div className="flex space-x-3">
+                                        <input
+                                            className="w-full rounded border-none ring-2 ring-indigo-500 focus:ring-2"
+                                            type="text"
+                                            onChange={(e) => setGroupChatName(e.target.value)}
+                                            placeholder="Chat name"
+                                        />
+                                        <button
+                                            onClick={handelRename}
+                                            className="rounded bg-green-500 px-4 text-white"
+                                            type="button"
+                                        >
+                                            Update
+                                        </button>
                                     </div>
-                                    {/* render users */}
-                                    {searchResults.length > 0 && (
-                                        <div className="h-[300px] overflow-y-auto">
-                                            {loading
-                                                ? "loading"
-                                                : searchResults.map((user: any) => (
-                                                      <UserList
-                                                          key={user._id}
-                                                          user={user}
-                                                          handelFunc={() => handelGroupAdd(user)}
-                                                      />
-                                                  ))}
-                                        </div>
-                                    )}
-
                                     <button
                                         className="w-full rounded bg-indigo-500 py-2 text-white"
                                         type="submit"
                                     >
-                                        Create Chat
+                                        Save
+                                    </button>
+                                    <button
+                                        className="w-full rounded bg-red-500 py-2 text-white"
+                                        type="submit"
+                                    >
+                                        Leave
                                     </button>
                                 </form>
                             </div>

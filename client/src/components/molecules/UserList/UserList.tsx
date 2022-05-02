@@ -15,7 +15,7 @@ function UserList({ user, handelFunc }: { user: IUser; handelFunc: () => any }) 
                 handelFunc();
             }}
         >
-            <div className="mx-4 my-4 flex cursor-pointer items-center space-x-4 rounded-lg bg-gray-100 py-4 px-4 hover:bg-gray-200">
+            <div className="mx-4 my-4 flex cursor-pointer flex-wrap items-center space-x-4 rounded-lg bg-gray-100 py-4 px-4 hover:bg-gray-200">
                 {/* avatar */}
                 <div>
                     <img className="h-10 w-10 rounded-full object-cover" src={user.pic} alt="" />

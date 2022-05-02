@@ -106,7 +106,10 @@ module.exports.renameGroup = AsyncErrorHandler(async (req, res, next) => {
         { _id: req.body.chatId },
         { chatName: req.body.chatName },
         { new: true },
-    );
+    )
+        .populate('users', '-password')
+        .populate('groupAdmin', '-password');
+
     res.status(200).send(updatedName);
 });
 

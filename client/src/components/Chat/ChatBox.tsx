@@ -1,20 +1,31 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { getSenderImage, getSenderName } from "components/ChatLogic/ChatLogic";
+import UpdateGroupModal from "components/Modals/UpdateGroupModal/UpdateGroupModal";
 import useAuth from "hooks/useAuth";
 import useChat from "hooks/useChat";
-import React from "react";
+import React, { useState } from "react";
 import { BsFillCameraVideoFill, BsFillTelephoneFill, BsInfoCircleFill } from "react-icons/bs";
 import SingleChat from "./SingleChat";
 
 function ChatBox() {
     const { selectedChat } = useChat();
     const { user } = useAuth();
+    const [isModelOpen, setIsModelOpen] = useState(false);
+
+    const closeModal = () => {
+        setIsModelOpen(false);
+    };
 
     console.log(selectedChat);
     return (
         <div>
+            <UpdateGroupModal
+                closeModal={closeModal}
+                isModelOpen={isModelOpen}
+                setIsModelOpen={setIsModelOpen}
+            />
             {/* chat head */}
-            {selectedChat.chatName && (
+            {selectedChat?.chatName && (
                 <div className="flex items-center justify-between border-b bg-white py-4 px-4 shadow-sm">
                     <div className="flex space-x-2 ">
                         {!selectedChat.isGroupChat && (
@@ -48,12 +59,15 @@ function ChatBox() {
                         >
                             <BsFillCameraVideoFill />
                         </button>
-                        <button
-                            type="button"
-                            className="rounded-full  px-2 py-2 text-xl text-indigo-500 hover:bg-gray-100"
-                        >
-                            <BsInfoCircleFill />
-                        </button>
+                        {selectedChat.isGroupChat && (
+                            <button
+                                onClick={() => setIsModelOpen(true)}
+                                type="button"
+                                className="rounded-full  px-2 py-2 text-xl text-indigo-500 hover:bg-gray-100"
+                            >
+                                <BsInfoCircleFill />
+                            </button>
+                        )}
                     </div>
                 </div>
             )}
