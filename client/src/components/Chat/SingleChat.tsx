@@ -1,9 +1,12 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 import { css } from "@emotion/react";
 import useAuth from "hooks/useAuth";
 import useChat from "hooks/useChat";
-import React, { useState } from "react";
+import useToast from "hooks/useToast";
+import React, { useEffect, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
+import MessageHttpReq from "services/message.service";
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -13,18 +16,73 @@ const override = css`
 
 function SingleChat() {
     const [newMessage, setNewMessage] = useState("");
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState<any>([]);
     const [loading, setLoading] = useState(false);
 
-    const { user } = useAuth();
-    const { selectedChat, setSelectedChat } = useChat();
+    const { token } = useAuth();
+    const { selectedChat } = useChat();
+    const { error: errorHandler } = useToast();
 
-    const sendMessages = (e: any) => {
+    const fetchMessages = async () => {
+        if (!selectedChat) return;
+        setLoading(true);
+        try {
+            const config = {
+                headers: {
+                    authorization: token,
+                },
+            };
+
+            const { data } = await MessageHttpReq.allMessages(
+                `/api/messages/${selectedChat._id}`,
+                config
+            );
+            setMessages(data);
+        } catch (error: any) {
+            if (error.response.data) {
+                const { message } = error.response.data;
+                errorHandler(message);
+                console.log(message);
+            }
+            setLoading(false);
+        }
+        setLoading(false);
+    };
+
+    const sendMessages = async (e: React.KeyboardEvent) => {
         if (e.key === "Enter" && newMessage !== "") {
-            console.log({ newMessage });
+            try {
+                const config = {
+                    "content-type": "application/json",
+                    headers: {
+                        authorization: token,
+                    },
+                };
+                const { message } = await MessageHttpReq.sendMessages(
+                    "/api/messages",
+                    { content: newMessage, chatId: selectedChat._id },
+                    config
+                );
+
+                setMessages([...messages, message]);
+                setNewMessage("");
+            } catch (error: any) {
+                if (error.response.data) {
+                    const { message } = error.response.data;
+                    errorHandler(message);
+                    console.log(message);
+                }
+            }
         }
     };
-    const typingHandler = (e: any) => {
+
+    // fetch all the messages
+    useEffect(() => {
+        fetchMessages();
+    }, [selectedChat]);
+
+    console.log(messages);
+    const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewMessage(e.target.value);
     };
 
@@ -36,14 +94,16 @@ function SingleChat() {
                 </div>
             ) : (
                 <section className="bg-gray-100">
+                    {/* show the messages */}
                     <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
                         <h1 className="h-[800px]">All messages</h1>
                     </div>
 
+                    {/* input field */}
                     <div className="bg-white py-4 px-4 shadow-lg">
                         <input
                             required
-                            className="w-full rounded border-gray-400"
+                            className="w-full rounded border-none shadow-xl ring-2 ring-indigo-400 focus:ring-2"
                             value={newMessage}
                             onChange={typingHandler}
                             onKeyDown={sendMessages}

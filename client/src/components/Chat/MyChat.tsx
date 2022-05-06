@@ -38,7 +38,7 @@ function MyChat() {
             }
         };
         fetchChats();
-    }, [chatLoading]);
+    }, [chatLoading, chats.length]);
 
     const closeModal = () => {
         setIsModelOpen(false);

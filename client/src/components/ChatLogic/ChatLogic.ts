@@ -19,3 +19,12 @@ export const getSenderImage = (loggedUser: any, users: any) => {
         return name[1].pic;
     }
 };
+export const getSenderFull = (loggedUser: any, users: any) => {
+    if (users) {
+        const full = users?.filter((user: any) => user?.email !== loggedUser?.email);
+        if (full) {
+            return full[0];
+        }
+        return full[1];
+    }
+};
