@@ -5,5 +5,13 @@ module.exports = {
     theme: {
         extend: {},
     },
-    plugins: [require("@tailwindcss/forms"), require("tw-elements/dist/plugin")],
+    plugins: [
+        require("@tailwindcss/forms"),
+        require("tw-elements/dist/plugin"),
+        require("tailwind-scrollbar-hide"),
+        require("tailwind-scrollbar"),
+    ],
+    variants: {
+        scrollbar: ["rounded"],
+    },
 };

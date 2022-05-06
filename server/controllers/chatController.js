@@ -55,18 +55,18 @@ module.exports.accessChat = AsyncErrorHandler(async (req, res, next) => {
 
 // fetch chats
 module.exports.fetchChats = AsyncErrorHandler(async (req, res) => {
-    const chats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
+    let chats = await Chat.find({ users: { $elemMatch: { $eq: req.user._id } } })
         .populate('users', '-password')
         .populate('latestMessages')
         .populate('groupAdmin', '-password')
         .sort({ updatedAt: -1 });
 
-    const request = await User.populate(chats, {
+    chats = await User.populate(chats, {
         path: 'latestMessages.sender',
         select: 'email name pic',
     });
 
-    res.send(request);
+    res.send(chats);
 });
 
 // createGroup chat

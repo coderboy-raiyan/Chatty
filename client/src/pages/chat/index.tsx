@@ -15,33 +15,34 @@ function chat() {
     return (
         <>
             <Sidebar setToggleSideBar={setToggleSideBar} toggleSideBar={toggleSideBar} />
+            <Head>
+                <title>Start Chatting - Chatty</title>
+            </Head>
+
             <div
                 onClick={(e) => {
                     e.stopPropagation();
                     setToggleSideBar(false);
                 }}
-                className=" bg-white"
+                className=" bg-white scrollbar-hide"
             >
                 {toggleSideBar && (
                     <div className="fixed top-0 left-0 right-0 bottom-0 z-[100] bg-[rgba(0,0,0,.3)]" />
                 )}
-                <Head>
-                    <title>Start Chatting - Chatty</title>
-                </Head>
 
                 <Header setToggleSideBar={setToggleSideBar} />
 
                 {/* main chats board */}
 
                 <div className="grid lg:max-w-full lg:grid-cols-12">
-                    <div className="col-span-3  border-r px-2 ">
-                        <div className="h-screen overflow-y-auto">
-                            <MyChat />
-                        </div>
+                    <div className="col-span-3 border-r px-2 ">
+                        <MyChat />
                     </div>
 
                     <div className="col-span-9">
-                        <ChatBox />
+                        <div>
+                            <ChatBox />
+                        </div>
                     </div>
                 </div>
             </div>

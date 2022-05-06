@@ -74,10 +74,10 @@ function ChatBox() {
 
             {/* chat body */}
             <div>
-                {selectedChat.chatName ? (
-                    <SingleChat selectedChat={selectedChat} />
+                {selectedChat?.chatName ? (
+                    <SingleChat />
                 ) : (
-                    <div className="my-20 flex h-screen justify-center">
+                    <div className="my-20 flex  justify-center">
                         <h1 className="text-xl font-semibold text-gray-400 lg:text-2xl">
                             Click on a user and Start chatting
                         </h1>

@@ -68,7 +68,7 @@ function MyChat() {
 
             {/* chats user */}
 
-            <div>
+            <div className="h-[450px] overflow-y-auto scrollbar-hide">
                 {chats ? (
                     chats.map((chat: any) => (
                         <div
