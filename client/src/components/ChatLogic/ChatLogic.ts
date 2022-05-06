@@ -28,3 +28,5 @@ export const getSenderFull = (loggedUser: any, users: any) => {
         return full[1];
     }
 };
+
+export const isSameSender = () => {};

@@ -7,6 +7,7 @@ import useToast from "hooks/useToast";
 import React, { useEffect, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import MessageHttpReq from "services/message.service";
+import ScrollableChat from "./ScrollableChat";
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -96,7 +97,7 @@ function SingleChat() {
                 <section className="bg-gray-100">
                     {/* show the messages */}
                     <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
-                        <h1 className="h-[800px]">All messages</h1>
+                        <ScrollableChat />
                     </div>
 
                     {/* input field */}
