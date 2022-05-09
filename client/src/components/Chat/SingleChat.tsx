@@ -96,8 +96,8 @@ function SingleChat() {
             ) : (
                 <section className="bg-gray-100">
                     {/* show the messages */}
-                    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
-                        <ScrollableChat />
+                    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll px-4 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
+                        <ScrollableChat messages={messages} />
                     </div>
 
                     {/* input field */}
