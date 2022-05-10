@@ -52,17 +52,30 @@ function MyChat() {
                 closeModal={closeModal}
             />
             {/* my chat header */}
-            <div className="my-4 flex justify-between">
-                <h1 className="text-2xl font-semibold">chats</h1>
+            <div className="my-4 flex  justify-between">
+                <h1 className="hidden text-2xl font-semibold md:inline-flex lg:inline-flex">
+                    chats
+                </h1>
                 <button
                     onClick={(e) => {
                         e.stopPropagation();
                         setIsModelOpen(true);
                     }}
                     type="button"
-                    className="rounded bg-gray-100 py-2 px-3 text-sm hover:bg-gray-200"
+                    className="hidden rounded bg-gray-100 py-2 px-3 text-sm hover:bg-gray-200 md:inline-flex lg:inline-flex"
                 >
                     New Group Chat <BsPlusLg className=" inline text-sm text-gray-500" />{" "}
+                </button>
+
+                <button
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        setIsModelOpen(true);
+                    }}
+                    type="button"
+                    className="mx-auto rounded bg-gray-100 py-2 px-3 text-sm hover:bg-gray-200 md:hidden lg:hidden "
+                >
+                    <BsPlusLg className=" inline text-sm text-gray-500" />{" "}
                 </button>
             </div>
 
@@ -81,7 +94,7 @@ function MyChat() {
                             <div className="flex items-center space-x-2 text-ellipsis ">
                                 {!chat.isGroupChat && (
                                     <img
-                                        className="flex h-10 w-10 rounded-full object-cover"
+                                        className="mx-auto flex h-12 w-12 rounded-full object-cover md:mx-0 md:h-10 md:w-10 lg:mx-0 lg:h-10 lg:w-10"
                                         src={
                                             chat.isGroupChat ? "" : getSenderImage(user, chat.users)
                                         }
@@ -89,7 +102,11 @@ function MyChat() {
                                     />
                                 )}
 
-                                <div className="text-[15px]">
+                                <div
+                                    className={`text-[15px] ${
+                                        chat.isGroupChat ? "visible" : "hidden md:block lg:block"
+                                    }`}
+                                >
                                     <p>
                                         {chat.isGroupChat
                                             ? chat.chatName

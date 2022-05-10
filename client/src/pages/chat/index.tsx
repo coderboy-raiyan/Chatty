@@ -34,12 +34,12 @@ function chat() {
 
                 {/* main chats board */}
 
-                <div className="grid lg:max-w-full lg:grid-cols-12">
-                    <div className="col-span-3 border-r px-2 ">
+                <div className="grid grid-cols-12 lg:max-w-full lg:grid-cols-12">
+                    <div className="col-span-2 border-r px-2  md:col-span-3 lg:col-span-3 ">
                         <MyChat />
                     </div>
 
-                    <div className="col-span-9">
+                    <div className="col-span-10 md:col-span-9 lg:col-span-9">
                         <div>
                             <ChatBox />
                         </div>

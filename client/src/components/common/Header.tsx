@@ -23,20 +23,20 @@ function Header({
                             e.stopPropagation();
                             setToggleSideBar(true);
                         }}
-                        className="flex w-[20%] cursor-pointer justify-center rounded py-2 px-2 transition-all hover:bg-gray-100"
+                        className="flex cursor-pointer justify-center  rounded py-2 px-2 transition-all hover:bg-gray-100 md:w-[20%] lg:w-[20%]"
                     >
                         <button type="button" className="text-2xl">
                             <BiSearchAlt />
                         </button>
                         <input
-                            className="cursor-pointer border-none bg-transparent text-sm font-semibold placeholder:text-gray-900"
+                            className="hidden cursor-pointer border-none bg-transparent text-sm font-semibold placeholder:text-gray-900 md:inline lg:inline"
                             placeholder="Search User"
                             disabled
                             type="text"
                         />
                     </div>
 
-                    <div className="flex w-[60%] items-center justify-center">
+                    <div className="flex w-[60%] flex-shrink-0  items-center justify-center md:w-[60%] lg:w-[60%]">
                         <img
                             className="h-16 w-48 object-cover"
                             src="https://res.cloudinary.com/dayleukzg/image/upload/v1650957053/Chatty/Modern_Blue_And_Yellow_Education_Tech_Startup_Logo_2_tdyewa.svg"
@@ -44,7 +44,7 @@ function Header({
                         />
                     </div>
 
-                    <ul className="flex w-[20%] items-center justify-end space-x-4">
+                    <ul className="flex w-[20%] flex-shrink-0 items-center justify-end space-x-4 md:w-[20%] lg:w-[20%]">
                         <li className="text-2xl">
                             <MdNotifications />
                         </li>
@@ -52,7 +52,7 @@ function Header({
                         <li onClick={logout}>
                             <div>
                                 <img
-                                    className="h-10 w-10 cursor-pointer rounded-full object-cover"
+                                    className="h-10 w-10  cursor-pointer rounded-full object-cover"
                                     src={user?.pic}
                                     alt=""
                                 />
