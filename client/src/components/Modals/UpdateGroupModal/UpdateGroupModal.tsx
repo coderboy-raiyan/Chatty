@@ -121,7 +121,7 @@ function UpdateGroupModal({
         setLoading(false);
     };
 
-    const handelDelete = async (userId: string) => {
+    const handelDelete = async (userId: string, own: any) => {
         const isExists = selectedChat.users.find((user: any) => user._id === userId);
 
         if (!isExists) {
@@ -129,7 +129,7 @@ function UpdateGroupModal({
             return;
         }
         const isAdmin = selectedChat.groupAdmin._id !== user._id;
-        if (isAdmin) {
+        if (isAdmin && !own) {
             errorToast("Only admin can remove users", "top-left");
             return;
         }
@@ -259,7 +259,7 @@ function UpdateGroupModal({
                                         className="w-full rounded bg-red-500 py-2 text-white"
                                         type="button"
                                         disabled={loading}
-                                        onClick={() => handelDelete(user._id!)}
+                                        onClick={() => handelDelete(user._id!, "own")}
                                     >
                                         Leave
                                     </button>

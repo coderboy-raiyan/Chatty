@@ -111,7 +111,11 @@ function Sidebar({
             {loading
                 ? "Loading"
                 : users.map((user) => (
-                      <UserList user={user} handelFunc={() => accessChat(user._id)} />
+                      <UserList
+                          key={user._id}
+                          user={user}
+                          handelFunc={() => accessChat(user._id)}
+                      />
                   ))}
 
             {loading && "Chat loading..."}
