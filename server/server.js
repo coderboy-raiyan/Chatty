@@ -28,8 +28,6 @@ const io = new Server(server, {
 io.on('connection', (socket) => {
     // console.log(socket.id);
 
-    console.log('connected', socket.id);
-
     socket.on('setup', (userData) => {
         socket.join(userData._id);
         socket.emit('connection');
@@ -38,6 +36,21 @@ io.on('connection', (socket) => {
     socket.on('join_chat', (room) => {
         socket.join(room);
         console.log(`User joined room ${room}`);
+    });
+
+    socket.on('typing', (selectedChat, user) => {
+        selectedChat.users.forEach((u) => {
+            if (u._id === user._id) return;
+
+            socket.in(u._id).emit('typing');
+        });
+    });
+    socket.on('stop_typing', (selectedChat, user) => {
+        selectedChat.users.forEach((u) => {
+            if (u._id === user._id) return;
+
+            socket.in(u._id).emit('stop_typing');
+        });
     });
 
     socket.on('new_message', (newMessageReceived) => {

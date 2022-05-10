@@ -73,12 +73,12 @@ function MyChat() {
                     chats.map((chat: any) => (
                         <div
                             className={`${
-                                selectedChat === chat ? "bg-indigo-500 text-white" : " bg-gray-100"
-                            } my-3 cursor-pointer rounded px-2 py-4 transition`}
+                                selectedChat === chat ? "bg-[#EAF3FF] text-gray-900" : " bg-white"
+                            } my-3 cursor-pointer rounded px-2 py-4 transition hover:bg-[#F2F2F2]`}
                             onClick={() => setSelectedChat(chat)}
                             key={chat._id}
                         >
-                            <div className="flex space-x-2 text-ellipsis">
+                            <div className="flex items-center space-x-2 text-ellipsis ">
                                 {!chat.isGroupChat && (
                                     <img
                                         className="flex h-10 w-10 rounded-full object-cover"
@@ -89,11 +89,14 @@ function MyChat() {
                                     />
                                 )}
 
-                                <p>
-                                    {chat.isGroupChat
-                                        ? chat.chatName
-                                        : getSenderName(user, chat.users)}
-                                </p>
+                                <div className="text-[15px]">
+                                    <p>
+                                        {chat.isGroupChat
+                                            ? chat.chatName
+                                            : getSenderName(user, chat.users)}
+                                    </p>
+                                    <p className="text-xs text-gray-500">You : Hey husky</p>
+                                </div>
                             </div>
                         </div>
                     ))
