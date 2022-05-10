@@ -121,12 +121,12 @@ function SingleChat() {
             ) : (
                 <section className="bg-gray-100">
                     {/* show the messages */}
-                    <div className="h-[400px]">
+                    <div className="h-[390px]">
                         <ScrollableChat messages={messages} />
                     </div>
 
                     {/* input field */}
-                    <div className="bg-white py-4 px-4 shadow-lg">
+                    <div className="bg-white py-4 px-4 ">
                         <input
                             required
                             className="w-full rounded border-none shadow-xl ring-2 ring-indigo-400 focus:ring-2"
