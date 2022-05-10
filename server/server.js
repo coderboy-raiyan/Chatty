@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable import/no-extraneous-dependencies */
 const app = require('express')();
 const express = require('express');
@@ -13,6 +14,8 @@ const errorHandler = require('./middleware/error');
 
 app.use(express.json());
 app.use(cors());
+// db connect
+connectDb();
 
 const server = http.createServer(app);
 
@@ -27,22 +30,20 @@ io.on('connection', (socket) => {
 
     console.log('connected', socket.id);
 
-    socket.on('join_room', (data) => {
-        socket.join(data);
-        console.log(`User joined in this room ${data}`);
+    socket.on('setup', (userData) => {
+        socket.join(userData._id);
+        socket.emit('connection');
     });
 
-    socket.on('send_message', (data) => {
-        socket.to(data.room).emit('receive_message', data);
+    socket.on('join_chat', (room) => {
+        socket.join(room);
+        console.log(`User joined room ${room}`);
     });
 
     socket.on('disconnect', () => {
         console.log('disconnected', socket.id);
     });
 });
-
-// db connect
-connectDb();
 
 app.get('/', (req, res) => {
     res.send('hello world');

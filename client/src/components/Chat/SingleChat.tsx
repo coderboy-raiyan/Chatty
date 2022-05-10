@@ -7,7 +7,11 @@ import useToast from "hooks/useToast";
 import React, { useEffect, useState } from "react";
 import GridLoader from "react-spinners/GridLoader";
 import MessageHttpReq from "services/message.service";
+import { io } from "socket.io-client";
 import ScrollableChat from "./ScrollableChat";
+
+const ENDPOINT: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
+let socket: any;
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -19,8 +23,9 @@ function SingleChat() {
     const [newMessage, setNewMessage] = useState("");
     const [messages, setMessages] = useState<any>([]);
     const [loading, setLoading] = useState(false);
+    const [socketConnected, setSocketConnected] = useState(false);
 
-    const { token } = useAuth();
+    const { token, user } = useAuth();
     const { selectedChat } = useChat();
     const { error: errorHandler } = useToast();
 
@@ -39,6 +44,7 @@ function SingleChat() {
                 config
             );
             setMessages(data);
+            socket.emit("join_chat", selectedChat._id);
         } catch (error: any) {
             if (error.response.data) {
                 const { message } = error.response.data;
@@ -77,15 +83,24 @@ function SingleChat() {
         }
     };
 
+    const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setNewMessage(e.target.value);
+    };
+
     // fetch all the messages
     useEffect(() => {
         fetchMessages();
     }, [selectedChat]);
 
-    console.log(messages);
-    const typingHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setNewMessage(e.target.value);
-    };
+    useEffect(() => {
+        socket = io(ENDPOINT!);
+        socket.emit("setup", user);
+        socket.on("connection", () => {
+            setSocketConnected(true);
+        });
+    }, []);
+
+    console.log(socketConnected);
 
     return (
         <section>
