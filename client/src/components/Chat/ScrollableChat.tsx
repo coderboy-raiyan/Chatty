@@ -1,11 +1,6 @@
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable no-underscore-dangle */
-import {
-    isLastMessage,
-    isSameSender,
-    isSameSenderMergin,
-    isSameUser,
-} from "components/ChatLogic/ChatLogic";
+import { isSameUser } from "components/ChatLogic/ChatLogic";
 import useAuth from "hooks/useAuth";
 import React from "react";
 import ScrollableFeed from "react-scrollable-feed";
@@ -13,32 +8,18 @@ import ScrollableFeed from "react-scrollable-feed";
 function ScrollableChat({ messages }: { messages: any[] }) {
     const { user } = useAuth();
     return (
-        <ScrollableFeed>
+        <ScrollableFeed className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll px-4 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
             {messages &&
-                messages.map((message: any, i) => (
-                    <div className="flex  items-center" key={message._id}>
-                        {(isSameSender(messages, message, i, user._id) ||
-                            isLastMessage(messages, i, user._id)) && (
-                            <div>
-                                <img
-                                    title={message.sender.name}
-                                    className="h-8 w-8 rounded-full"
-                                    src={message.sender.pic}
-                                    alt=""
-                                />
-                            </div>
-                        )}
+                messages.map((message: any, i: any) => (
+                    <div className="flex" key={message._id}>
                         <span
                             className={`${
                                 message.sender._id === user._id
-                                    ? "bg-blue-500"
+                                    ? " bg-blue-500"
                                     : "bg-gray-200 text-black"
-                            } rounded-full py-2 px-3 text-[15px] text-white  ${isSameSenderMergin(
-                                messages,
-                                message,
-                                i,
-                                user._id
-                            )} ${isSameUser(messages, message, i) ? "mt-3" : "mt-4"}`}
+                            }  rounded-full py-2 px-3 text-[15px] text-white ${
+                                message.sender._id === user._id ? "ml-auto" : "ml-0"
+                            } ${isSameUser(messages, message, i) ? "mt-0" : "mt-3"} mb-1`}
                         >
                             {message.content}
                         </span>

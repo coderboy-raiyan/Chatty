@@ -12,6 +12,7 @@ import ScrollableChat from "./ScrollableChat";
 
 const ENDPOINT: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
 let socket: any;
+let selectedCompare: any;
 
 // Can be a string as well. Need to ensure each key-value pair ends with ;
 const override = css`
@@ -70,7 +71,7 @@ function SingleChat() {
                     { content: newMessage, chatId: selectedChat._id },
                     config
                 );
-
+                socket.emit("new_message", message);
                 setMessages([...messages, message]);
                 setNewMessage("");
             } catch (error: any) {
@@ -90,6 +91,7 @@ function SingleChat() {
     // fetch all the messages
     useEffect(() => {
         fetchMessages();
+        selectedCompare = selectedChat;
     }, [selectedChat]);
 
     useEffect(() => {
@@ -100,7 +102,15 @@ function SingleChat() {
         });
     }, []);
 
-    console.log(socketConnected);
+    useEffect(() => {
+        socket.on("message_received", (newMessageReceived: any) => {
+            if (!selectedCompare && selectedCompare._id !== newMessageReceived.chat._id) {
+                // console.log("Give notification");
+            } else {
+                setMessages([...messages, newMessageReceived]);
+            }
+        });
+    });
 
     return (
         <section>
@@ -111,7 +121,7 @@ function SingleChat() {
             ) : (
                 <section className="bg-gray-100">
                     {/* show the messages */}
-                    <div className="scrollbar-thumb-rounded-full scrollbar-track-rounded-full h-[400px] overflow-y-scroll px-4 py-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-400 ">
+                    <div className="h-[400px]">
                         <ScrollableChat messages={messages} />
                     </div>
 

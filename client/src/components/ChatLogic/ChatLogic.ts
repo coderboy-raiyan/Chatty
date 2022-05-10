@@ -50,26 +50,26 @@ export const isLastMessage = (messages: any, i: any, userId: any) => {
     }
 };
 
-export const isSameSenderMergin = (messages: any, m: any, i: any, userId: any) => {
-    if (messages) {
-        // console.log(i === messages.length - 1);
+// export const isSameSenderMergin = (messages: any, m: any, i: any, userId: any) => {
+//     if (messages) {
+//         // console.log(i === messages.length - 1);
 
-        if (
-            i < messages.length - 1 &&
-            messages[i + 1].sender._id === m.sender._id &&
-            messages[i].sender._id !== userId
-        )
-            return "ml-33";
-        if (
-            (i < messages.length - 1 &&
-                messages[i + 1].sender._id !== m.sender._id &&
-                messages[i].sender._id !== userId) ||
-            (i === messages.length - 1 && messages[i].sender._id !== userId)
-        )
-            return 0;
-        return "ml-auto";
-    }
-};
+//         if (
+//             i < messages.length - 1 &&
+//             messages[i + 1].sender._id === m.sender._id &&
+//             messages[i].sender._id !== userId
+//         )
+//             return "ml-33";
+//         if (
+//             (i < messages.length - 1 &&
+//                 messages[i + 1].sender._id !== m.sender._id &&
+//                 messages[i].sender._id !== userId) ||
+//             (i === messages.length - 1 && messages[i].sender._id !== userId)
+//         )
+//             return 0;
+//         return "ml-auto";
+//     }
+// };
 
 export const isSameUser = (messages: any, m: any, i: any) =>
     i > 0 && messages[i - 1].sender._id === m.sender._id;
